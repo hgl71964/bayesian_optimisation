@@ -13,12 +13,12 @@ from . import GPs  #  this script should be imported as packages
 class bayesian_optimiser:
     """
     data type assume torch.tensor.float()
-
     the optimiser is set to MAXIMISE function!
     """
     def __init__(self, 
                 gp_name: str, 
                 gp_params: dict, 
+                device: str,
                 params: dict,  #  params for acquisition functions
                 ):
         self.params = params
