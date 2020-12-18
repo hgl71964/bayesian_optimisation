@@ -19,7 +19,7 @@ class bayesian_optimiser:
                 params: dict,  #  params for acquisition functions
                 ):
         self.params = params
-        self.gpr = self._init_GPs(gp_name, gp_params)  #  instantiate GP
+        self.gpr = self._init_GPs(gp_name, gp_params, device)  #  instantiate GP
         self.device = device
 
     def outer_loop(self, 
@@ -131,8 +131,8 @@ class bayesian_optimiser:
     def _init_MCsampler(self,num_samples):
         return botorch.sampling.samplers.SobolQMCNormalSampler(num_samples=num_samples)
 
-    def _init_GPs(self,gp_name,gp_params):
-        return GPs.BOtorch_GP(gp_name,**gp_params)
+    def _init_GPs(self,gp_name,gp_params, device):
+        return GPs.BOtorch_GP(gp_name, device, **gp_params)
 
 if __name__ == "__main__":
     print("test")

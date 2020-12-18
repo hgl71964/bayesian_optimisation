@@ -8,9 +8,10 @@ class BOtorch_GP:
 
     can only apply to standard kernels GPs
     """
-    def __init__(self, gp_name, **kwargs):
+    def __init__(self, gp_name, device, **kwargs):
         self.name = gp_name
         self.params = kwargs
+        self.device = device
 
     def init_model(self, x, y, state_dict=None):
         """
@@ -45,7 +46,7 @@ class BOtorch_GP:
         mll = gpytorch.mlls.ExactMarginalLogLikelihood(model.likelihood, model)
         if state_dict is not None:
             model.load_state_dict(state_dict)
-        return mll, model
+        return mll.to(self.device), model.to(self.device)
 
     def fit_model(self, mll, model, x, y):
         """
@@ -96,7 +97,7 @@ class BOtorch_GP:
             loss.backward()
             optimizer.step()
      
-        print(f"N-MLM: {loss.item():.2f}")
+        print(f"NLML: {loss.item():.2f}")
         model.eval()
         model.likelihood.eval()
 
