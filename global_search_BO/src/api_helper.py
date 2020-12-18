@@ -21,8 +21,8 @@ class api_utils:
             Returns:
                 neg_margins: [q, 1]
             """
-
-            neg_margins = tr.zeros(x.shape[0])
+            q = x.shape[0]
+            neg_margins = tr.zeros(q, )
 
             # we may want to push query off the boundary
             # for i in x:
@@ -34,18 +34,18 @@ class api_utils:
 
             for _ in range(5):  # handle potential network disconnection issue
                 try:
-                    rewards = api_func(x)  # float
-                    for i, reward in enumerate(rewards):
-                        neg_margins[i] = -(reward / r0)   # record normalised negative margin
+                    for i in range(q):  # TODO: apply multi-threading, rather than sequential
+                        r = api_func(x)  # float
+                        neg_margins[i] = -(r / r0)   # record normalised negative margin
+
                 except TypeError as ter:
                     print(f"api has error {ter}")
-                    print("reward is:", reward)
                     print("query is:", repr(x))
                     sleep(10)
                 else:
                     break
 
-            return tr.tensor(neg_margins).view(-1, 1).float()  # assume dtype == torch.float() overall
+            return neg_margins.view(-1, 1).float()  # assume dtype == torch.float() overall
 
         return wrapper
     
@@ -61,7 +61,7 @@ class env:
         usually a = 1, b = 100
         """
         x, y = query.flatten()  # only take as input 2-element tensor
-        return (1 - x)**2 + 100 * (y - x**2)**2
+        return tr.tensor([(1 - x)**2 + 100 * (y - x**2)**2])
 
 
         
