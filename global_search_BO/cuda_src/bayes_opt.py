@@ -8,7 +8,7 @@ import gpytorch
 from . import GPs  #  this script should be imported as packages
 
 
-#TODO: extend GPU utility
+#TODO: 1. bounds; 2. data & api transition 
 
 class bayesian_optimiser:
     """
