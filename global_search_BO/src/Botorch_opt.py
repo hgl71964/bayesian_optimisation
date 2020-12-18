@@ -7,12 +7,10 @@ implement a botorch bayesian optimiser
 import torch
 import numpy as np
 import copy
-import GPs
+from . import GPs  #  this script should be imported as packages
 import time
 import datetime
-from api_helper import api_utils
-from function_slicer import slicer
-from gp_evaluator import gp_evaluation
+from .api_helper import api_utils  #  this script should be imported as packages
 import botorch
 import gpytorch
 
