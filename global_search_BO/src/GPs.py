@@ -74,7 +74,7 @@ class BOtorch_GP:
             kernel = gpytorch.kernels.ScaleKernel(gpytorch.kernels.LinearKernel())
         return kernel
 
-    def _ADAM(self, mll,model,x,y):
+    def _ADAM(self, mll, model, x, y):
         """
         MLE tuning via ADAM
         Args:
@@ -111,28 +111,3 @@ class BOtorch_GP:
 
     def __str__(self):
         return self.name
-    
-# def init_model(self, x, y, state_dict=None):
-    #     """
-    #     initialise and update a BOtorch model every outside loop
-
-    #     Args:
-    #         x: training samples; shape [n, d] -> n samples, d-dimensional
-    #         y: function values; shape [n,m] -> multi-output m-dimensional; m = 1 in our case
-    #         state_dict: update model when it is provided
-
-    #     Returns:
-    #         mll: Gpytorch Marginal likelihood
-    #         model: Botorch model
-    #     """
-    #     # make noise; we have zero noise
-    #     noise = torch.zeros_like(y, dtype = y.dtype)
-
-    #     model = botorch.models.FixedNoiseGP(x, y, noise)
-    #     model.covar_module = eval("self._"+f"{self.name}()")
-    #     model.likelihood.learn_additional_noise = False
-
-    #     mll = gpytorch.mlls.ExactMarginalLogLikelihood(model.likelihood, model)
-    #     if state_dict is not None:
-    #         model.load_state_dict(state_dict)
-    #     return mll, model
