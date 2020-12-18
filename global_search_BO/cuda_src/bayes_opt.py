@@ -7,9 +7,6 @@ import botorch
 import gpytorch
 from . import GPs  #  this script should be imported as packages
 
-
-#TODO: 1. bounds; 2. data & api transition 
-
 class bayesian_optimiser:
     """
     data type assume torch.tensor.float()
@@ -42,7 +39,7 @@ class bayesian_optimiser:
         # assume bounds of variables are the same; shape [2,d]
         input_dim = x.shape[-1]
         bounds = tr.tensor([[domain[0]] * input_dim, [domain[1]] * input_dim], \
-                                    dtype = tr.float32)
+                                    dtype = tr.float32).to(device)
 
         mll, model = self.gpr.init_model(x, y, state_dict=None)
         # times = [None] * T

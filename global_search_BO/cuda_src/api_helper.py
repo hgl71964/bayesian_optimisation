@@ -12,6 +12,8 @@ class api_utils:
         """
         wrap the api service;
             provide small number perturbation, type conversion etc.
+
+            api_func acts on cpu, while bayes_opt at GPU
         """
 
         def wrapper(x: tr.tensor,  #  shape[q,d]; q query, d-dimensional
