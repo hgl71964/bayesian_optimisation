@@ -1,9 +1,3 @@
-"""
-2020 Summer internship
-
-implement a botorch bayesian optimiser
-"""
-
 import torch as tr
 import numpy as np
 import copy
@@ -50,32 +44,19 @@ class bayesian_optimiser:
                                     dtype = tr.float32)
 
         mll, model = self.gpr.init_model(x, y, state_dict=None)
-        times = [None] * T
+        # times = [None] * T
 
         for t in range(T):
 
             # fit model every round
             self.gpr.fit_model(mll, model, x, y)
 
-            #  timing
-            acq_func_time = time.time()
-
             # acquisition function && query
             acq = self._init_acqu_func(model, y)
             query = self._inner_loop(acq, batch_size, bounds)
 
-            #  timing 
-            middle_time = time.time()
-
             # reward
             reward = api(query, r0)
-
-            api_time = time.time()
-
-            #  runtime report
-            print(f"acq_func took {(middle_time - acq_func_time):.1f}s")
-            print(f"api took {(api_time - middle_time):.1f}s")
-            times[t] = middle_time - acq_func_time
 
             # append available data && update model
             x = tr.cat([x, query])
@@ -84,7 +65,7 @@ class bayesian_optimiser:
 
             print(f"iteration: {t+1}, drop {100*(1+reward.max()):,.2f}%; min ${-reward.max()*r0:,.0f}")
         
-        print(f"acq_func average runtime per iteration {(sum(times)/len(times)):.1f}s")
+        # print(f"acq_func average runtime per iteration {(sum(times)/len(times)):.1f}s")
         return x, y
 
     def _inner_loop(self, acq_func, batch_size, bounds):
