@@ -6,7 +6,6 @@ import os
 import pandas as pd
 
 class api_utils:
-
     @staticmethod
     def transform(api_func: callable):
         """
@@ -49,7 +48,6 @@ class env:
     """
     an simulated environment; upon receiving query, give reward
     """
-
     @staticmethod
     def rosenbrock(query: tr.tensor):
         """
@@ -57,7 +55,6 @@ class env:
         Global minimum: 0; at (a, a^2)
         usually a = 1, b = 100
         """
-
         x, y = query.flatten()  # only take as input 2-element tensor
         return (1 - x)**2 + 100 * (y - x**2)**2
 
