@@ -6,6 +6,7 @@ import os
 import pandas as pd
 
 class api_utils:
+    
     @staticmethod
     def transform(api_func: callable):
         """
