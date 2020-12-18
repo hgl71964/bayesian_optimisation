@@ -62,7 +62,7 @@ class bayesian_optimiser:
             x, y = tr.cat([x, query]), tr.cat([y, reward])
             mll, model = self.gpr.init_model(x, y, state_dict=model.state_dict())
 
-            print(f"iteration: {t+1}, drop {100*(1+reward.max()):,.2f}%; min ${-reward.max()*r0:,.0f}")
+            print(f"iteration: {t+1}, reward: {reward.max()):,.2f}")
         
         # print(f"acq_func average runtime per iteration {(sum(times)/len(times)):.1f}s")
         return x, y
