@@ -1,6 +1,6 @@
-# 2020 internship on applied Bayesian Optimisation
+# applied Bayesian Optimisation
 
-- The scripts folder contains encapsulated classes
+- margin_BO -> 2020 internship
 
-- demo_bayesian_opt.ipynb provides a general framework for Bayesian Optimisation
+- global_search_BO -> S-cube
 
