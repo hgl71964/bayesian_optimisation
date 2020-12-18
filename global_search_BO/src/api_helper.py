@@ -36,7 +36,7 @@ class api_utils:
                 try:
                     for i in range(q):  # TODO: apply multi-threading, rather than sequential
                         r = api_func(x)  # float
-                        neg_margins[i] = -(r / r0)   # record normalised negative margin
+                        neg_margins[i] = -(r/r0)   # record normalised negative margin
 
                 except TypeError as ter:
                     print(f"api has error {ter}")
