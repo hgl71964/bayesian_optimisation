@@ -12,15 +12,19 @@ class api_utils:
         """
         wrap the api service;
             provide small number perturbation, type conversion etc.
+
+            api_func acts on cpu, while bayes_opt at GPU
         """
 
         def wrapper(x: tr.tensor,  #  shape[q,d]; q query, d-dimensional
                     r0: float,  #  unormalised reward
+                    device: str,
                     ):
             """
             Returns:
                 neg_margins: [q, 1]
             """
+            x = x.cpu()
             q = x.shape[0]
             neg_margins = tr.zeros(q, )
 
@@ -45,7 +49,7 @@ class api_utils:
                 else:
                     break
 
-            return neg_margins.view(-1, 1).float()  # assume dtype == torch.float() overall
+            return neg_margins.view(-1, 1).to(device)  # assume dtype == torch.float() overall
 
         return wrapper
     
