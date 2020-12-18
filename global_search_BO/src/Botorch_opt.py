@@ -1,11 +1,11 @@
 import torch as tr
 import numpy as np
 import copy
-from . import GPs  #  this script should be imported as packages
 import time
 import datetime
 import botorch
 import gpytorch
+from . import GPs  #  this script should be imported as packages
 
 
 #TODO: extend GPU utility
@@ -135,3 +135,6 @@ class bayesian_optimiser:
 
     def _init_GPs(self,gp_name,gp_params):
         return GPs.BOtorch_GP(gp_name,**gp_params)
+
+if __name__ == "__main__":
+    print("test")
