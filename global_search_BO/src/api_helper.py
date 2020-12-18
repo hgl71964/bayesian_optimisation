@@ -13,25 +13,29 @@ class api_utils:
             provide small number perturbation, type conversion etc.
         """
 
-        def wrapper(x: "query; tensor -> shape[q,d]",
-                    m0: float):
+        def wrapper(x: tr.tensor,  #  shape[q,d]; q query, d-dimensional
+                    r0: float,  #  unormalised reward
+                    ):
+            """
+            Returns:
+                neg_margins: [q, 1]
+            """
 
-            x = x.numpy()
-            neg_margins = [None] * x.shape[0]
+            neg_margins = tr.zeros(x.shape[0])
 
-            # small number perturbation
-            for i in x:
-                if np.equal(i.all(), 1.):  # very extreme case; has been tested
-                        i -= 1e-3     
-            # generally, slightly push variables off boundary         
-            x[x == 1] -= 1e-6
-            x[x == 0] += 1e-6
+            # we may want to push query off the boundary
+            # for i in x:
+                # if np.equal(i.all(), 1.):  # very extreme case; has been tested
+                        # i -= 1e-3     
+            ## generally, slightly push variables off boundary         
+            # x[x == 1] -= 1e-6
+            # x[x == 0] += 1e-6
 
             for _ in range(5):  # handle potential network disconnection issue
                 try:
-                    rewards = api_func(x)
+                    rewards = api_func(x)  # float
                     for i, reward in enumerate(rewards):
-                        neg_margins[i] = -(reward["margin"][0] / m0)   # record normalised negative margin
+                        neg_margins[i] = -(reward / r0)   # record normalised negative margin
                 except TypeError as ter:
                     print(f"api has error {ter}")
                     print("reward is:", reward)

@@ -59,8 +59,7 @@ class bayesian_optimiser:
             reward = api(query, r0)
 
             # append available data && update model
-            x = tr.cat([x, query])
-            y = tr.cat([y, reward])
+            x, y = tr.cat([x, query]), tr.cat([y, reward])
             mll, model = self.gpr.init_model(x, y, state_dict=model.state_dict())
 
             print(f"iteration: {t+1}, drop {100*(1+reward.max()):,.2f}%; min ${-reward.max()*r0:,.0f}")
@@ -75,7 +74,7 @@ class bayesian_optimiser:
         q=batch_size,
         num_restarts=self.params["N_start"],       # number of starting point SGD
         raw_samples=self.params["raw_samples"],    # heuristic init
-        sequential = False,                        # this enable SGD, instead of one-step optimal
+        sequential=False,                        # this enable SGD, instead of one-step optimal
         )
         query = candidates.detach()
         return query
