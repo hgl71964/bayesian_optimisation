@@ -10,7 +10,6 @@ import copy
 from . import GPs  #  this script should be imported as packages
 import time
 import datetime
-from .api_helper import api_utils  #  this script should be imported as packages
 import botorch
 import gpytorch
 
