@@ -66,6 +66,3 @@ class env:
         """
         x, y = query.flatten()  # only take as input 2-element tensor
         return tr.tensor([(1 - x)**2 + 100 * (y - x**2)**2])
-
-
-        
