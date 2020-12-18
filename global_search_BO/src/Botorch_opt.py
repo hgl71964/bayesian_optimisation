@@ -4,7 +4,7 @@
 implement a botorch bayesian optimiser
 """
 
-import torch
+import torch as tr
 import numpy as np
 import copy
 from . import GPs  #  this script should be imported as packages
@@ -14,41 +14,40 @@ import botorch
 import gpytorch
 
 
+#TODO: extend GPU utility
+
 class bayesian_optimiser:
     """
     data type assume torch.tensor.float()
 
     the optimiser is set to MAXIMISE function!
     """
-    def __init__(self, gp_name, gp_params, params):
-        """
-        Args:
-            gp_nanme: name of the gp model; str
-            gp_params: hyper-parameter for gp; dict
-        kwargs:
-            parameters for acquisiton function
-        """
+    def __init__(self, 
+                gp_name: str, 
+                gp_params: dict, 
+                params: dict,  #  params for acquisition functions
+                ):
         self.params = params
         self.gpr = self._init_GPs(gp_name, gp_params)  #  instantiate GP
 
-    def outer_loop(self, T, x, y, m0, api, batch_size):
+    def outer_loop(self, 
+                    T: int, # time_horizon 
+                    bound: tuple,  # variable domain, (0, 1)
+                    x: tr.tensor, # init samples; [n,d] -> n samples, d-dimensional
+                    y: tr.tensor, # shape shape [n,1]; 1-dimensional output
+                    m0: float, # unormalised reward,
+                    api: callable,  #  reward = api(query, m0)
+                    batch_size: int, #  q-parallelism
+                    ):
         """
-        standard bayesian optimisation loop
-
-        Args:
-            T: time_horizon;
-            x: init samples; shape [n,d] -> n samples, d-dimensional
-            y: shape shape [n,1]; 1-dimensional output
-            m0: initial margin, on which the normalisation is based; float
-            batch_size: q-parallelism; int
-            api: callable; -> reward = api(query, m0)
-
+        standard bayesian optimisation loop;
         Returns:
             x,y: collection of queries and rewards; torch.tensor
         """
-        # bounds for input dimension; assume dtype = torch.float; shape [2,d]
-        input_dim = x.size(-1)
-        bounds = torch.tensor([[0] * input_dim, [1] * input_dim], dtype = torch.float)
+        # bounds for input dimension; shape [2,d]
+        input_dim = x.shape[-1]
+        bounds = tr.tensor([[bound[0]] * input_dim, [bound[1]] * input_dim], \
+                                    dtype = tr.float32)
 
         mll, model = self.gpr.init_model(x, y, state_dict=None)
         times = [None] * T
@@ -79,8 +78,8 @@ class bayesian_optimiser:
             times[t] = middle_time - acq_func_time
 
             # append available data && update model
-            x = torch.cat([x, query])
-            y = torch.cat([y, reward])
+            x = tr.cat([x, query])
+            y = tr.cat([y, reward])
             mll, model = self.gpr.init_model(x, y, state_dict=model.state_dict())
 
             print(f"time step {t+1}, drop {100*(1+reward.max()):,.2f}%; min ${-reward.max()*m0:,.0f}")
