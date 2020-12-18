@@ -35,8 +35,8 @@ class bayesian_optimiser:
                     bound: tuple,  # variable domain, (0, 1)
                     x: tr.tensor, # init samples; [n,d] -> n samples, d-dimensional
                     y: tr.tensor, # shape shape [n,1]; 1-dimensional output
-                    m0: float, # unormalised reward,
-                    api: callable,  #  reward = api(query, m0)
+                    r0: float, # unormalised reward,
+                    api: callable,  #  reward = api(query, r0)
                     batch_size: int, #  q-parallelism
                     ):
         """
@@ -68,7 +68,7 @@ class bayesian_optimiser:
             middle_time = time.time()
 
             # reward
-            reward = api(query, m0)
+            reward = api(query, r0)
 
             api_time = time.time()
 
@@ -82,7 +82,7 @@ class bayesian_optimiser:
             y = tr.cat([y, reward])
             mll, model = self.gpr.init_model(x, y, state_dict=model.state_dict())
 
-            print(f"time step {t+1}, drop {100*(1+reward.max()):,.2f}%; min ${-reward.max()*m0:,.0f}")
+            print(f"iteration: {t+1}, drop {100*(1+reward.max()):,.2f}%; min ${-reward.max()*r0:,.0f}")
         
         print(f"acq_func average runtime per iteration {(sum(times)/len(times)):.1f}s")
         return x, y
