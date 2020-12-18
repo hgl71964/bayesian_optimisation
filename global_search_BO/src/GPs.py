@@ -102,7 +102,7 @@ class BOtorch_GP:
             loss.backward()
             optimizer.step()
      
-        print("Iter %d - Loss: %.3f" % (self.params["epochs"], loss.item()))
+        print("negative MLM: "loss.item()))
         model.eval()
         model.likelihood.eval()
 
