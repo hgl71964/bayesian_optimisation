@@ -1,13 +1,3 @@
-"""
-2020 Summer internship
-
-a api_helper allows:
-            origin problem <=> simplified problem
-            assuming m accounts & n kinds of contracts
-            provide wrapper for the actual api function
-
-Details see my thesis
-"""
 import numpy as np
 import torch
 import copy
@@ -15,46 +5,13 @@ from time import sleep
 import os
 import pandas as pd
 
-
-class portfolio_constructor:
-    
-    @staticmethod
-    def construct_portfolio(tables: list, folder_name, file_name= "") -> pd.DataFrame:
-        """
-        Args:
-            tables: a list of table; each table is a hand-crafted portfolio
-        """
-        dfs = [None] * len(tables)
-
-        #  assume the tables has the same order
-        contracts = ["BTSU0", "DUU0", "IKU0", "OATU0", "OEU0", "RXU0", "UBU0"]
-        accounts = ["Barclays - F&O Clearing", 
-                    "Barclays - 3952C F&O", 
-                    "BAML - F&O Clearing"]
-        for i,table in enumerate(tables):
-
-            assert (len(table) == len(contracts) and len(table[0]) == len(accounts))
-            dfs[i] = pd.DataFrame(table, index = contracts, columns = accounts)
-
-        if not file_name:
-            print("not saving unless provide a file_name")
-
-        else:
-            full_path = os.path.join(folder_name, file_name)
-            with open(full_path + ".pt", "wb") as f:
-                torch.save((dfs), f)
-                f.close()
-
-        return dfs
-
-
 class api_utils:
 
     @staticmethod
     def transform(api_func: callable):
         """
-         wrap the api service;
-             provide small number perturbation, type conversion etc.
+        wrap the api service;
+            provide small number perturbation, type conversion etc.
         """
 
         def wrapper(x: "query; tensor -> shape[q,d]",
@@ -88,82 +45,6 @@ class api_utils:
 
         return wrapper
     
-    @staticmethod
-    def create_start_position(wrap_class: callable, 
-                            cobdate: "datetime",
-                            portfolio: pd.DataFrame,
-                            margins_param: dict = {},
-                            fixed_start = False,
-                            ) -> tuple:
-
-        #  instantiate api from a given portfolio
-        wrap = wrap_class(cobdate, portfolio, randomize = False, margins = margins_param) 
-        ndim = wrap.x0.shape[0]
-
-        if fixed_start:
-            x0 = np.ones(ndim,) * 0.5
-            margins_init = wrap.f(x0)
-        else:
-            x0 = copy.deepcopy(wrap.x0)
-            margins_init = wrap.f(wrap.x0)
-            
-        m0 = margins_init['margin'][0] # float
-        b0 = margins_init['buffer'][0]
-        print(f"${m0:,.0f}, buffer is: ${b0:,.0f}")
-
-        x0 = torch.from_numpy(x0).float().view(-1, ndim)  # shape [n,d]
-        y0 = torch.tensor([-1], dtype=torch.float).view(-1, 1)  # shape [n,1]; min Margin == max (-Margin)
-        return (wrap, x0, y0, m0)
-
-    @staticmethod
-    def create_random_start(wrap_class: "opt_class", 
-                            cobdate: "date",
-                            positions: "dataframe", 
-                            folder_name: str,
-                            n: int = 3, 
-                            ):
-        """
-        Args:
-            n: numbers of starting points; = runs of the experiment
-            random: if True -> randomly initialise positions
-        Returns:
-            data: list[tuple]
-        """
-        data = [None] * n
-        for i in range(n):   # if randomize, function structure change even within the same day
-            if i == 0:
-                wrap = wrap_class(cobdate, positions, randomize = False) 
-                margins_init = wrap.f(wrap.x0)
-                x0 = copy.deepcopy(wrap.x0)
-                ndim = wrap.x0.shape[0]  # dimensions of inputx
-            else:
-                x0 = np.random.rand(ndim)
-                margins_init = wrap.f(x0)
-
-            m0 = margins_init['margin'][0] # float
-            b0 = margins_init['buffer'][0]
-            print(f"${m0:,.0f}, buffer is: ${b0:,.0f}")
-
-            # initial samples; 1 data point; ndim-dimensional input; assume data type = torch.float
-            x0 = torch.from_numpy(x0).float().view(-1, ndim)  # shape [n,d]
-            y0 = torch.tensor([-1], dtype=torch.float).view(-1, 1)  # shape [n,1]; min Margin == max (-Margin)
-            data[i] = (x0, y0, m0)
-        
-        if folder_name:
-            full_path = os.path.join(folder_name, "random_start_data.pt")
-            with open(full_path, "wb") as f:
-                torch.save(data, f)
-                f.close()
-        return data
-
-    @staticmethod
-    def load_random_start(folder_name: str):
-        full_path = os.path.join(folder_name, "random_start_data.pt")
-        with open(full_path, "rb") as f:
-            objs = torch.load(f)
-            f.close()
-        return objs
-
 class fake_api:
     """
     some make up function to simulate the API performance

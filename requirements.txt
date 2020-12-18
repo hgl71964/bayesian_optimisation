@@ -34,6 +34,7 @@ mkl-random==1.1.1
 mkl-service==2.3.0
 numpy==1.19.2
 olefile==0.46
+pandas==1.1.5
 parso==0.7.0
 pexpect==4.8.0
 pickleshare==0.7.5
@@ -50,6 +51,7 @@ Pygments==2.7.1
 pylint==2.6.0
 pyOpenSSL==19.1.0
 PySocks==1.7.1
+python-dateutil==2.8.1
 python-etcd==0.4.5
 pytz==2020.1
 PyYAML==5.3.1
