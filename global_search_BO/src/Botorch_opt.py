@@ -26,7 +26,7 @@ class bayesian_optimiser:
 
     def outer_loop(self, 
                     T: int, # time_horizon 
-                    bound: tuple,  # variable domain, (0, 1)
+                    domain: tuple,  # variable domain, (0, 1)
                     x: tr.tensor, # init samples; [n,d] -> n samples, d-dimensional
                     y: tr.tensor, # shape shape [n,1]; 1-dimensional output
                     r0: float, # unormalised reward,
@@ -38,9 +38,9 @@ class bayesian_optimiser:
         Returns:
             x,y: collection of queries and rewards; torch.tensor
         """
-        # bounds for input dimension; shape [2,d]
+        # assume bounds of variables are the same; shape [2,d]
         input_dim = x.shape[-1]
-        bounds = tr.tensor([[bound[0]] * input_dim, [bound[1]] * input_dim], \
+        bounds = tr.tensor([[domain[0]] * input_dim, [domain[1]] * input_dim], \
                                     dtype = tr.float32)
 
         mll, model = self.gpr.init_model(x, y, state_dict=None)
@@ -62,7 +62,7 @@ class bayesian_optimiser:
             x, y = tr.cat([x, query]), tr.cat([y, reward])
             mll, model = self.gpr.init_model(x, y, state_dict=model.state_dict())
 
-            print(f"iteration: {t+1}, reward: {reward.max()):,.2f}")
+            print(f"iteration: {t+1}, reward: {reward.max().item():,.2f}")
         
         # print(f"acq_func average runtime per iteration {(sum(times)/len(times)):.1f}s")
         return x, y
