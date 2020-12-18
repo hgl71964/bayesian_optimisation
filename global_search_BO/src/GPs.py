@@ -1,9 +1,3 @@
-"""
-2020 Summer internship
-
-implement botorch model, such that it can be used by BOtorch
-"""
-
 import torch
 import botorch
 import gpytorch
