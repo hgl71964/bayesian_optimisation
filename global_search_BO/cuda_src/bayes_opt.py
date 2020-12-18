@@ -56,7 +56,7 @@ class bayesian_optimiser:
             query = self._inner_loop(acq, batch_size, bounds)
 
             # reward
-            reward = api(query, r0)
+            query = query.cpu(); reward = api(query, r0); reward = reward.to(device)
 
             # append available data && update model
             x, y = tr.cat([x, query]), tr.cat([y, reward])
@@ -76,7 +76,7 @@ class bayesian_optimiser:
         raw_samples=self.params["raw_samples"],    # heuristic init
         sequential=False,                        # this enable SGD, instead of one-step optimal
         )
-        query = candidates.detach()
+        query = candidates.detach()  # remove the variable from computational graph
         return query
 
     def _init_acqu_func(self,model,ys):
