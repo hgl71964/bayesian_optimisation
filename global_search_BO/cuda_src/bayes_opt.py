@@ -23,6 +23,7 @@ class bayesian_optimiser:
                 ):
         self.params = params
         self.gpr = self._init_GPs(gp_name, gp_params)  #  instantiate GP
+        self.device = device
 
     def outer_loop(self, 
                     T: int, # time_horizon 
@@ -30,7 +31,7 @@ class bayesian_optimiser:
                     x: tr.tensor, # init samples; [n,d] -> n samples, d-dimensional
                     y: tr.tensor, # shape shape [n,1]; 1-dimensional output
                     r0: float, # unormalised reward,
-                    api: callable,  #  reward = api(query, r0)
+                    api: callable,  #  reward = api(query, r0, device)
                     batch_size: int, #  q-parallelism
                     ):
         """
@@ -56,7 +57,7 @@ class bayesian_optimiser:
             query = self._inner_loop(acq, batch_size, bounds)
 
             # reward
-            query = query.cpu(); reward = api(query, r0); reward = reward.to(device)
+            reward = api(query, r0, self.device)
 
             # append available data && update model
             x, y = tr.cat([x, query]), tr.cat([y, reward])
