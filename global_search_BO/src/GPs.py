@@ -8,7 +8,7 @@ class BOtorch_GP:
 
     can only apply to standard kernels GPs
     """
-    def __init__(self,gp_name,**kwargs):
+    def __init__(self, gp_name, **kwargs):
         self.name = gp_name
         self.params = kwargs
 
