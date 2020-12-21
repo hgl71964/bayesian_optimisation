@@ -16,6 +16,7 @@ class random_opt:
                     y0: tr.Tensor,  # initial reward
                     r0: float,  # unormalised reward,
                     api: callable,  # return functional evaluation
+                    batch_size: int,  # random search is highly parallisable
                     ):
         x, y = tr.zeros((T, 2)), tr.zeros((T, ))
         x0 = x0.flatten() 
