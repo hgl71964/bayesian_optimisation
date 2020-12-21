@@ -25,8 +25,8 @@ class bayesian_optimiser:
     def outer_loop(self, 
                     T: int, # time_horizon 
                     domain: tuple,  # variable domain, (0, 1)
-                    x: tr.tensor, # init samples; [n,d] -> n samples, d-dimensional
-                    y: tr.tensor, # shape shape [n,1]; 1-dimensional output
+                    x: tr.Tensor, # init samples; [n,d] -> n samples, d-dimensional
+                    y: tr.Tensor, # shape shape [n,1]; 1-dimensional output
                     r0: float, # unormalised reward,
                     api: callable,  #  reward = api(query, r0, device)
                     batch_size: int, #  q-parallelism
