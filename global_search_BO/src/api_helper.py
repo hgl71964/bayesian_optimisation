@@ -45,7 +45,7 @@ class api_utils:
                     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
                         ans = executor.map(api_func, x)   # multi-threading
 
-                    for i in range(q):  
+                    for i, r in enumerate(ans):
                         neg_margins[i] = -(r/r0)   # record normalised negative margin
 
                 except TypeError as ter:
@@ -90,8 +90,8 @@ class api_utils:
 
             for _ in range(5):  # handle potential network disconnection issue
                 try:
-                    for i in range(q):  # TODO: apply multi-threading, rather than sequential
-                        r = api_func(x)  # float
+                    for i in range(q):  # sequentially query the Obj
+                        r = api_func(x[i])  # float
                         neg_margins[i] = -(r/r0)   # record normalised negative margin
 
                 except TypeError as ter:
@@ -119,3 +119,8 @@ class env:
         """
         x, y = query.flatten()  # only take as input 2-element tensor
         return tr.tensor([(1 - x)**2 + 100 * (y - x**2)**2])
+    
+    @staticmethod
+    def rosenbrock_grad(query: tr.tensor):
+        x, y = query.flatten()  # only take as input 2-element tensor 
+        return tr.tensor([2+400*(x**2 - y) + 800*(x**2), 200*(y-(x**2))])
