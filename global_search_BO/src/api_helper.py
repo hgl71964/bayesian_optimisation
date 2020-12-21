@@ -87,18 +87,11 @@ class api_utils:
 
         return wrapper
 
-    
 
     @staticmethod
     def multi_thread_transform(api_func: callable):
         """
-        wrap the api service;
-            provide small number perturbation, type conversion etc.
-
-            api_func acts on cpu, while bayes_opt at GPU
-
-            querying objective function may be a io bound problem,
-            i.e. wait for the response from the api
+            IO bound version
         """
 
         def wrapper(x: tr.tensor,  #  shape[q,d]; q query, d-dimensional
@@ -137,8 +130,6 @@ class api_utils:
             return neg_margins.view(-1, 1).to(device)  # assume dtype == torch.float() overall
 
         return wrapper
-
-
 
     
 class env:
