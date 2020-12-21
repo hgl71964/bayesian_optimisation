@@ -4,6 +4,27 @@ import copy
 from time import sleep
 
 
+class random_search:
+
+    def __init__(self):
+        self.device = "cpu"
+
+    def outer_loop(
+                    self,
+                    T: int,  # iteration to run
+                    x0: tr.Tensor,  # initial position; shape (2,)
+                    y0: tr.Tensor,  # initial reward
+                    r0: float,  # unormalised reward,
+                    api: callable,  # return functional evaluation
+                    ):
+        x, y = tr.zeros((T, 2)), tr.zeros((T, ))
+        x0 = x0.flatten() 
+
+        for i in range(T):
+            x[i], y[i] = x0, api(x0, r0, self.device)
+            # TODO: random policy
+        return x, y
+
 class ADAM_opt:
 
     def __init__(self, **kwargs):
