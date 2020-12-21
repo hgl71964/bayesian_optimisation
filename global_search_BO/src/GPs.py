@@ -97,7 +97,7 @@ class BOtorch_GP:
             loss.backward()
             optimizer.step()
      
-        print(f"NLML: {loss.item():.2f}")
+        print(f"NLML: {loss.item():,.2f}")
         model.eval()
         model.likelihood.eval()
 
