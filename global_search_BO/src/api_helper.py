@@ -43,10 +43,8 @@ class api_utils:
             for _ in range(5):  # handle potential network disconnection issue
                 try:
                     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
-                        ans = executor.map(api_func, x)   # multi-threading
-
-                    for i, r in enumerate(ans):
-                        neg_margins[i] = -(r/r0)   # record normalised negative margin
+                        for i, r in enumerate(executor.map(api_func, x)):  # multi-threading
+                            neg_margins[i] = -(r/r0)   
 
                 except TypeError as ter:
                     print(f"api has error {ter}")
