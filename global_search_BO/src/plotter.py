@@ -8,11 +8,11 @@ class rosenbrock_plot:
     def plot(
             x: tr.tensor or np.ndarray,
             y: tr.tensor or np.ndarray,
-            path: tr.tensor or np.ndarray, # [2, n]; row_2: x coor; row_2: y coor
+            path: list, # each ele: ([2, n], str); row_1: x coor; row_2: y coor; str: name
             ):
 
         if isinstance(x, tr.Tensor):
-            x, y, path = x.numpy(), y.numpy(), path.numpy()
+            x, y = x.numpy(), y.numpy()
             
         X, Y = np.meshgrid(x, y)
         f = lambda x,y: (1-x) ** 2 + 100*((y-x**2)**2)
@@ -28,8 +28,8 @@ class rosenbrock_plot:
         # fig.colorbar(cf, ax=ax)
         cbar = fig.colorbar(cf, ax=ax)
         cbar.ax.tick_params(labelsize=14) 
-
-        ax.scatter(path[0,:], path[1,:], marker='o', color='red', label='descent path')
+        for i in range(len(path)):
+            ax.scatter(path[i][0][0,:], path[i][0][1,:], marker='o', label=f'{path[i][1]}')
         ax.scatter([1],[1],marker='o',color='white',label='global minimum')
         ax.legend(prop={'size':16})
         plt.show()
