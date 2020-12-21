@@ -30,7 +30,7 @@ class api_utils:
             """
             x = x.cpu()
             q = x.shape[0]
-            neg_margins = tr.zeros(q, )
+            neg_margins = tr.zeros((q, ))
 
             # we may want to push query off the boundary
             # for i in x:
@@ -42,7 +42,7 @@ class api_utils:
 
             for _ in range(5):  # handle potential network disconnection issue
                 try:
-                    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+                    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
                         for i, r in enumerate(executor.map(api_func, x)):  # multi-threading
                             neg_margins[i] = -(r/r0)   
 
