@@ -8,7 +8,7 @@ class rosenbrock_plot:
     def plot(
             x: tr.tensor or np.ndarray,
             y: tr.tensor or np.ndarray,
-            path: list, # each ele: ([2, n], str); row_1: x coor; row_2: y coor; str: name
+            path: list, # each ele: (x_coor, y_coor, str); str: name
             ):
 
         if isinstance(x, tr.Tensor):
@@ -29,7 +29,7 @@ class rosenbrock_plot:
         cbar = fig.colorbar(cf, ax=ax)
         cbar.ax.tick_params(labelsize=14) 
         for i in range(len(path)):
-            ax.scatter(path[i][0][0,:], path[i][0][1,:], marker='o', label=f'{path[i][1]}')
+            ax.scatter(path[i][0], path[i][0], marker='o', label=f'{path[i][1]}')
         ax.scatter([1],[1],marker='o',color='white',label='global minimum')
         ax.legend(prop={'size':16})
         plt.show()
