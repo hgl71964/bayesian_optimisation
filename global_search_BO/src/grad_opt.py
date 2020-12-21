@@ -36,6 +36,7 @@ class ADAM_opt:
             self.counter += 1
             x[i], y[i] = x0, api(x0, r0, self.device)
 
+            # query for gradient 
             grad = self.api_grad(x0)  # grad; shape(2, )
 
             # momentum 
