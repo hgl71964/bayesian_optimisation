@@ -4,10 +4,10 @@ import copy
 from time import sleep
 
 
-class random_search:
+class random_opt:
 
     def __init__(self):
-        self.device = "cpu"
+        self.device = tr.device("cpu")
 
     def outer_loop(
                     self,
@@ -35,7 +35,8 @@ class ADAM_opt:
         self.mu = tr.zeros((2,))
         self.v = tr.zeros((2,))
         self.counter = 0
-        self.device = "cpu"
+        self.device = tr.device("cpu")
+
 
 
     def outer_loop(
