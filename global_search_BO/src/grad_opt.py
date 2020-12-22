@@ -1,4 +1,5 @@
 import torch as tr
+import copy
 
 class ADAM_opt:
 
@@ -20,7 +21,7 @@ class ADAM_opt:
                 api: callable,  # return functional evaluation
                 api_grad: callable,  # return gradient 
                 ):
-        input_dim = x0.shape[-1]
+        input_dim = x0.shape[-1]; x_opt = copy.deepcopy(x0)
         x, y = tr.zeros((T, input_dim)), tr.zeros((T, ))
 
         for i in range(T):
@@ -28,13 +29,10 @@ class ADAM_opt:
             # collect stats
             self.counter += 1
 
-            # print(x0, x[i])
-            # print(api(x0, r0, self.device).flatten())
-
-            x[i], y[i] = x0, api(x0, r0, self.device).flatten()
+            x[i], y[i] = x_opt, api(x_opt, r0, self.device).flatten()
 
             # query for gradient 
-            grad = api_grad(x0)  # grad; shape(2, )
+            grad = api_grad(x_opt)  # grad; shape(2, )
 
             # momentum 
             self.mu = self._moment_update(1, self.beta1, grad, self.mu)
@@ -43,7 +41,7 @@ class ADAM_opt:
             # descent
             up = self.alpha * (self.mu / (1- (self.beta1 ** self.counter)) )
             down = self.eta + tr.sqrt(self.v / (1- (self.beta2**self.counter)) )
-            x0 -= up/down
+            x_opt -= up/down
 
         return x, y
     
