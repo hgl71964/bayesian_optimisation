@@ -6,9 +6,9 @@ class rosenbrock_plot:
 
     @staticmethod
     def plot(
-            x: tr.tensor or np.ndarray,
-            y: tr.tensor or np.ndarray,
-            path: list, # each ele: (x_coor, y_coor, str); str: name
+            x: np.ndarray, # the range of the variable
+            y: np.ndarray, # the range of the variable
+            data: list,  # a list of dict, which contains data
             ):
 
         if isinstance(x, tr.Tensor):
@@ -28,13 +28,12 @@ class rosenbrock_plot:
         # fig.colorbar(cf, ax=ax)
         cbar = fig.colorbar(cf, ax=ax)
         cbar.ax.tick_params(labelsize=14) 
-        for i in range(len(path)):
-            ax.scatter(path[i][0], path[i][0], marker='o', label=f'{path[i][1]}')
+
+        for i in range(len(data)):
+            x = data[i]["x"]
+            name = data[i]["name"]
+            ax.scatter(x[:,0], x[:,1], marker='o', label=f'{name}')
+
         ax.scatter([1],[1],marker='o',color='white',label='global minimum')
-        ax.legend(prop={'size':16})
+        ax.legend(prop={'size':12})
         plt.show()
-
-# if __name__ == "__main__":
-#     x = tr.rand(2)
-
-#     print(isinstance(x, tr.Tensor))
