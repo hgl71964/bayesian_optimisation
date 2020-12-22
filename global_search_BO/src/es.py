@@ -50,7 +50,7 @@ class random_opt:
                 self,
                 T: int,  # iteration to run
                 domain: tuple,  # domain to search 
-                x0: tr.Tensor,  # initial position; shape (2,)
+                x0: tr.Tensor,  # initial position; shape (1,2)
                 r0: float,  # unormalised reward
                 api: callable,  # return functional evaluation
                 batch_size: int,  # random search is highly parallisable

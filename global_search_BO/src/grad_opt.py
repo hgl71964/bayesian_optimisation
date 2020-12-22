@@ -15,7 +15,7 @@ class ADAM_opt:
     def outer_loop(
                 self,
                 T: int,  # iteration to run
-                x0: tr.Tensor,  # initial position; shape (2,)
+                x0: tr.Tensor,  # initial position; shape (1, 2)
                 r0: float,  # unormalised reward,
                 api: callable,  # return functional evaluation
                 api_grad: callable,  # return gradient 
