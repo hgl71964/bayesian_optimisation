@@ -13,7 +13,6 @@ class evolutionary_strategy:
         self.std = kwargs.get("std", 1e-1)
         self.lr = kwargs.get("lr", 1e-3)
 
-
     def outer_loop(
                 self,
                 T: int,  # iteration to run
