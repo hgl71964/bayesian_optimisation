@@ -41,7 +41,7 @@ class ADAM_opt:
             # descent
             up = self.alpha * (self.mu / (1- (self.beta1 ** self.counter)) )
             down = self.eta + tr.sqrt(self.v / (1- (self.beta2**self.counter)) )
-            x_opt -= up/down
+            x_opt -= up/down  #  do not need to flip sign because adam use grads
 
         return x, y
     
