@@ -41,8 +41,6 @@ class evolutionary_strategy:
         return x, y
 
 
-
-
 class random_opt:
 
     def __init__(self):
@@ -68,6 +66,7 @@ class random_opt:
             reward = api(query, r0, self.device).flatten()  # bottleneck for random search;
             
             x[1+i * batch_size : 1 + (i+1) * batch_size], \
-                y[1+i * batch_size : 1 + (i+1) * batch_size] = query, reward
+                y[1+i * batch_size : 1 + (i+1) * batch_size] = query, reward 
+                #  storage may become a bottleneck due to big data
                 
         return x, y

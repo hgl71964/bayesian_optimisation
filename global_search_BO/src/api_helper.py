@@ -59,7 +59,6 @@ class api_utils:
         """
         for cpu bound problem
         """
-
         def wrapper(x: tr.tensor,  #  shape[q,d]; q query, d-dimensional
                     r0: float,  #  unormalised reward
                     device: str,
