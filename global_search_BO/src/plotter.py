@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import torch as tr
+import os
 
 class rosenbrock_plot:
 
@@ -50,8 +51,39 @@ class convergent_plot:
 
         for i in range(len(data)):
             x = data[i]["x"]
+            y = data[i]["y"]
             name = data[i]["name"]
-            ax.scatter(x[:,0], x[:,1], marker='o', label=f'{name}')
+            ax.plot(y, label=f'{name}')
 
         ax.legend(prop={'size':12})
         plt.show()
+
+    @staticmethod
+    def plot_all(folder: str, 
+                n=None):
+
+
+        files = os.listdir(folder)
+
+        fig, ax = plt.subplots(figsize=(12,8))
+
+        for f in files:
+            
+            obj = tr.load(os.path.join(folder, f))
+
+            x, y, name = obj["x"], obj["y"], obj["name"]
+
+            if n is None:
+                ax.plot(y, label=f"{name}")
+            else:
+                ax.plot(y[:n], label=f"{name}")
+
+
+        ax.set_title("Convergent plots", fontsize=14)
+        ax.set_xlabel("Number of evaluations", fontsize = 12)
+        ax.set_ylabel("Rewards", fontsize = 12)
+        ax.legend(prop={'size':12})
+        plt.show()
+
+        
+
