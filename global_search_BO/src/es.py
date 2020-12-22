@@ -8,7 +8,7 @@ class evolutionary_strategy:
                 self,
                 **kwargs,
                 ):
-        self.device = kwargs.get("device", "cpu")
+        self.device = kwargs.get("device", tr.device("cpu"))
         self.population_size = kwargs.get("population_size", 100)
         self.std = kwargs.get("std", 1e-1)
         self.lr = kwargs.get("lr", 1e-3)
