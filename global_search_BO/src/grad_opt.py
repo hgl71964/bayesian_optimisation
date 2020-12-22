@@ -13,22 +13,23 @@ class random_opt:
                 self,
                 T: int,  # iteration to run
                 x0: tr.Tensor,  # initial position; shape (2,)
-                r0: float,  # unormalised reward,
+                r0: float,  # unormalised reward
                 api: callable,  # return functional evaluation
                 batch_size: int,  # random search is highly parallisable
                 ):
         input_dim = x.shape[-1]
-        x, y = tr.zeros((T * batch_size, input_dim)), tr.zeros((T, ))
-        x0 = x0.flatten() 
+        x, y = tr.zeros((1+T * batch_size, input_dim)), tr.zeros((1+T, ))
+        x0 = x0.flatten()
+        x[0], y[0] = x0, api(x0, r0, self.device).flatten() 
 
         for i in range(T):
-            x[i], y[i] = x0, api(x0, r0, self.device)
 
-            query = tr.rand(batch_size, input_dim)
-            reward = api(query, r0, self.device)  # bottleneck for random search
+            query = tr.rand((batch_size, input_dim))
+            reward = api(query, r0, self.device)  # bottleneck for random search; shape (batch_size, 1)
             
-            x[i:i+batch_size], y[] = 
-
+            x[i * batch_size : (i+1) * batch_size], \
+                y[i * batch_size : (i+1) * batch_size] = query, reward
+                
         return x, y
 
 class ADAM_opt:
