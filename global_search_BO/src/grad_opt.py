@@ -19,11 +19,9 @@ class random_opt:
                 ):
         input_dim = x.shape[-1]
         x, y = tr.zeros((1+T * batch_size, input_dim)), tr.zeros((1+T, ))
-        x0 = x0.flatten()
-        x[0], y[0] = x0, api(x0, r0, self.device).flatten() 
+        x[0], y[0] = x0.flatten(), api(x0, r0, self.device).flatten() 
 
         for i in range(T):
-
             query = tr.rand((batch_size, input_dim))
             reward = api(query, r0, self.device).flatten()  # bottleneck for random search;
             
