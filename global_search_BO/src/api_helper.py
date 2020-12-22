@@ -69,10 +69,10 @@ class api_utils:
             """
             x = x.cpu(); q = x.shape[0]; neg_margins = tr.zeros((q, ))
 
-            for _ in range(5):  # handle potential network disconnection issue
+            for _ in range(5):  # exception control
                 try:
                     with multiprocessing.Pool(processes=10) as pool:
-                        for i, r in enumerate(pool.map(api_func, x)):  # multi-threading
+                        for i, r in enumerate(pool.map(api_func, x)):
                             neg_margins[i] = -(r/r0)   
 
                 except TypeError as ter:
@@ -82,7 +82,7 @@ class api_utils:
                 else:
                     break
 
-            return neg_margins.view(-1, 1).to(device)  # assume dtype == torch.float() overall
+            return neg_margins.view(-1, 1).to(device) 
 
         return wrapper
 
@@ -90,9 +90,8 @@ class api_utils:
     @staticmethod
     def multi_thread_transform(api_func: callable):
         """
-            IO bound version
+        IO bound version
         """
-
         def wrapper(x: tr.tensor,  #  shape[q,d]; q query, d-dimensional
                     r0: float,  #  unormalised reward
                     device: str,
@@ -101,17 +100,7 @@ class api_utils:
             Returns:
                 neg_margins: [q, 1]
             """
-            x = x.cpu()
-            q = x.shape[0]
-            neg_margins = tr.zeros((q, ))
-
-            # we may want to push query off the boundary
-            # for i in x:
-                # if np.equal(i.all(), 1.):  # very extreme case; has been tested
-                        # i -= 1e-3     
-            ## generally, slightly push variables off boundary         
-            # x[x == 1] -= 1e-6
-            # x[x == 0] += 1e-6
+            x = x.cpu(); q = x.shape[0]; neg_margins = tr.zeros((q, ))
 
             for _ in range(5):  # handle potential network disconnection issue
                 try:

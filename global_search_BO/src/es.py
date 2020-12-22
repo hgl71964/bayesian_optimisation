@@ -32,7 +32,7 @@ class evolutionary_strategy:
             gause_noise = tr.normal(0, self.std, (self.population_size, input_dim))
             query += gause_noise
 
-            reward = api(query, r0, self.device).flatten() # shape:(population_size, )
+            reward = api(query, r0, self.device).flatten() # shape:(population_size, ); bottleneck!
             avg = (reward - tr.mean(reward)) / tr.std(reward)
             x0 += x0 + self.lr /(self.population_size*self.std) * (gause_noise.T@avg)
 
