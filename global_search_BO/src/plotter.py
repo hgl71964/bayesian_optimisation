@@ -37,3 +37,21 @@ class rosenbrock_plot:
         ax.scatter([1],[1],marker='o',color='white',label='global minimum')
         ax.legend(prop={'size':12})
         plt.show()
+
+
+class convergent_plot:
+
+    @staticmethod
+    def plot(
+            data: list,  # a list of dict, which contains data
+            ):
+
+        fig, ax = plt.subplots(figsize=(12,8))
+
+        for i in range(len(data)):
+            x = data[i]["x"]
+            name = data[i]["name"]
+            ax.scatter(x[:,0], x[:,1], marker='o', label=f'{name}')
+
+        ax.legend(prop={'size':12})
+        plt.show()
