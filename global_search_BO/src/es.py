@@ -20,18 +20,16 @@ class evolutionary_strategy:
                 x0: tr.Tensor,  # initial position; shape (2,)
                 r0: float,  # unormalised reward
                 api: callable,  # return functional evaluation
-                batch_size: int,  # random search is highly parallisable
                 ):
         input_dim = x.shape[-1]
+        x, y = tr.zeros((1+T, input_dim)), tr.zeros((1+T, ))
+        x[0], y[0] = x0, api(x0, r0, self.device).flatten() 
 
-        # TODO: refine shape
-        x, y = tr.zeros((1+T * batch_size, input_dim)), tr.zeros((1+T, ))
-        x[0], y[0] = x0.flatten(), api(x0, r0, self.device).flatten() 
+        x0 = x0.view(1, -1)
 
-        query = x0.view(1, -1).repeat(self.population_size, 1)  # shape:(population_size, input_dim)
+        for i in range(1,T+1):
 
-
-        for i in range(T):
+            query = x0.repeat(self.population_size, 1)  # shape:(population_size, input_dim)
             gause_noise = tr.normal(0, self.std, (self.population_size, input_dim))
             query += gause_noise
 
@@ -40,7 +38,9 @@ class evolutionary_strategy:
             x0 += x0 + self.lr /(self.population_size*self.std) * (gause_noise.T@avg)
 
             # TODO collect stats
-            
+            x[i], y[i] = 
+
+
         return x, y
 
 
