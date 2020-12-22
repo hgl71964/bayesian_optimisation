@@ -10,20 +10,25 @@ class random_opt:
         self.device = tr.device("cpu")
 
     def outer_loop(
-                    self,
-                    T: int,  # iteration to run
-                    x0: tr.Tensor,  # initial position; shape (2,)
-                    y0: tr.Tensor,  # initial reward
-                    r0: float,  # unormalised reward,
-                    api: callable,  # return functional evaluation
-                    batch_size: int,  # random search is highly parallisable
-                    ):
-        x, y = tr.zeros((T, 2)), tr.zeros((T, ))
+                self,
+                T: int,  # iteration to run
+                x0: tr.Tensor,  # initial position; shape (2,)
+                r0: float,  # unormalised reward,
+                api: callable,  # return functional evaluation
+                batch_size: int,  # random search is highly parallisable
+                ):
+        input_dim = x.shape[-1]
+        x, y = tr.zeros((T * batch_size, input_dim)), tr.zeros((T, ))
         x0 = x0.flatten() 
 
         for i in range(T):
             x[i], y[i] = x0, api(x0, r0, self.device)
-            # TODO: random policy
+
+            query = tr.rand(batch_size, input_dim)
+            reward = api(query, r0, self.device)  # bottleneck for random search
+            
+            x[i:i+batch_size], y[] = 
+
         return x, y
 
 class ADAM_opt:
@@ -38,26 +43,23 @@ class ADAM_opt:
         self.counter = 0
         self.device = tr.device("cpu")
 
-
-
     def outer_loop(
                 self,
                 T: int,  # iteration to run
                 x0: tr.Tensor,  # initial position; shape (2,)
-                y0: tr.Tensor,  # initial reward
                 r0: float,  # unormalised reward,
                 api: callable,  # return functional evaluation
                 api_grad: callable,  # return gradient 
                 ):
-
-        x, y = tr.zeros((T, 2)), tr.zeros((T, ))
+        input_dim = x.shape[-1]
+        x, y = tr.zeros((T, input_dim)), tr.zeros((T, ))
         x0 = x0.flatten()
 
         for i in range(T):
 
             # collect stats
             self.counter += 1
-            x[i], y[i] = x0, api(x0, r0, self.device)
+            x[i], y[i] = x0, api(x0, r0, self.device).flatten()
 
             # query for gradient 
             grad = self.api_grad(x0)  # grad; shape(2, )
