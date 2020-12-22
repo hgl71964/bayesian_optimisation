@@ -3,7 +3,7 @@ import numpy as np
 import torch as tr
 
 
-class saver:
+class helper:
 
     @staticmethod
     def standard_save(x, y, r0, name, path):
@@ -17,11 +17,8 @@ class saver:
         tr.save(data, path)
         print(f"saving {name} data")
 
-
-class stats:
-
     @staticmethod
-    def printf(obj: dict):
+    def stats(obj: dict):
 
 
         return None
