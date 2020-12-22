@@ -3,7 +3,7 @@ import copy
 
 
 class evolutionary_strategy:
-
+    """parallelising need multiple workers"""
     def __init__(
                 self,
                 **kwargs,
@@ -37,9 +37,7 @@ class evolutionary_strategy:
             avg = (reward - tr.mean(reward)) / tr.std(reward)
             x0 += x0 + self.lr /(self.population_size*self.std) * (gause_noise.T@avg)
 
-            # TODO collect stats
-            x[i], y[i] = 
-
+            x[i], y[i] = x0, reward.max()  # TODO: we use max() as the reward in this round?
 
         return x, y
 
