@@ -16,3 +16,12 @@ class saver:
         
         tr.save(data, path)
         print(f"saving {name} data")
+
+
+class stats:
+
+    @staticmethod
+    def printf(obj: dict):
+
+
+        return None
