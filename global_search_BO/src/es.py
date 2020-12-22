@@ -23,19 +23,24 @@ class evolutionary_strategy:
                 batch_size: int,  # random search is highly parallisable
                 ):
         input_dim = x.shape[-1]
+
+        # TODO: refine shape
         x, y = tr.zeros((1+T * batch_size, input_dim)), tr.zeros((1+T, ))
         x[0], y[0] = x0.flatten(), api(x0, r0, self.device).flatten() 
 
-        x0 = x0.view(1, -1).repeat(self.population_size, 1)  # shape:(population_size, input_dim)
+        query = x0.view(1, -1).repeat(self.population_size, 1)  # shape:(population_size, input_dim)
 
 
         for i in range(T):
             gause_noise = tr.normal(0, self.std, (self.population_size, input_dim))
+            query += gause_noise
 
+            reward = api(query, r0, self.device).flatten() # shape:(population_size, )
+            avg = (reward - tr.mean(reward)) / tr.std(reward)
+            x0 += x0 + self.lr /(self.population_size*self.std) * (gause_noise.T@avg)
 
-
-
-        
+            # TODO collect stats
+            
         return x, y
 
 
