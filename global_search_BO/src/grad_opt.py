@@ -3,10 +3,10 @@ import torch as tr
 class ADAM_opt:
 
     def __init__(self, **kwargs):
-        self.beta1 = kwargs.get(["beta1"], .9)
-        self.beta2 = kwargs.get(["beta2"], .999)
-        self.alpha = kwargs.get(["alpha"], 1e-3) 
-        self.eta = kwargs.get(["eta"], 1e-8)
+        self.beta1 = kwargs.get("beta1", .9)
+        self.beta2 = kwargs.get("beta2", .999)
+        self.alpha = kwargs.get("alpha", 1e-3) 
+        self.eta = kwargs.get("eta", 1e-8)
         self.mu = tr.zeros((2,))
         self.v = tr.zeros((2,))
         self.counter = 0
@@ -20,7 +20,7 @@ class ADAM_opt:
                 api: callable,  # return functional evaluation
                 api_grad: callable,  # return gradient 
                 ):
-        input_dim = x.shape[-1]
+        input_dim = x0.shape[-1]
         x, y = tr.zeros((T, input_dim)), tr.zeros((T, ))
         x0 = x0.flatten()
 
