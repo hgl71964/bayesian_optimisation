@@ -22,16 +22,19 @@ class ADAM_opt:
                 ):
         input_dim = x0.shape[-1]
         x, y = tr.zeros((T, input_dim)), tr.zeros((T, ))
-        x0 = x0.flatten()
 
         for i in range(T):
 
             # collect stats
             self.counter += 1
+
+            # print(x0, x[i])
+            # print(api(x0, r0, self.device).flatten())
+
             x[i], y[i] = x0, api(x0, r0, self.device).flatten()
 
             # query for gradient 
-            grad = self.api_grad(x0)  # grad; shape(2, )
+            grad = api_grad(x0)  # grad; shape(2, )
 
             # momentum 
             self.mu = self._moment_update(1, self.beta1, grad, self.mu)

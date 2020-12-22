@@ -56,7 +56,7 @@ class random_opt:
                 batch_size: int,  # random search is highly parallisable
                 ):
         input_dim = x0.shape[-1]
-        x, y = tr.zeros((1+T * batch_size, input_dim)), tr.zeros((1+T, ))
+        x, y = tr.zeros((1+T * batch_size, input_dim)), tr.zeros((1+T*batch_size, ))
         x[0], y[0] = x0.flatten(), api(x0, r0, self.device).flatten() 
 
         r1, r2 = domain  # get the domain, r1 < r2
