@@ -4,16 +4,39 @@ import copy
 
 class evolutionary_strategy:
 
-    def __init__(self):
-        pass
+    def __init__(
+                self,
+                **kwargs,
+                ):
+        self.device = kwargs.get("device", "cpu")
+        self.population_size = kwargs.get("population_size", 100)
+        self.std = kwargs.get("std", 1e-1)
+        self.lr = kwargs.get("lr", 1e-3)
 
 
     def outer_loop(
                 self,
+                T: int,  # iteration to run
+                x0: tr.Tensor,  # initial position; shape (2,)
+                r0: float,  # unormalised reward
+                api: callable,  # return functional evaluation
+                batch_size: int,  # random search is highly parallisable
                 ):
+        input_dim = x.shape[-1]
+        x, y = tr.zeros((1+T * batch_size, input_dim)), tr.zeros((1+T, ))
+        x[0], y[0] = x0.flatten(), api(x0, r0, self.device).flatten() 
+
+        x0 = x0.view(1, -1).repeat(self.population_size, 1)  # shape:(population_size, input_dim)
+
+
+        for i in range(T):
+            gause_noise = tr.normal(0, self.std, (self.population_size, input_dim))
+
+
+
 
         
-        return 
+        return x, y
 
 
 
