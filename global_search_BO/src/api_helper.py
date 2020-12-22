@@ -64,6 +64,8 @@ class api_utils:
                     device: str,
                     ):
             """
+            multiprocessing must pickle things to sling them among processes
+
             Returns:
                 neg_margins: [q, 1]
             """
