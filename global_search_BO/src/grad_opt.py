@@ -25,10 +25,10 @@ class random_opt:
         for i in range(T):
 
             query = tr.rand((batch_size, input_dim))
-            reward = api(query, r0, self.device)  # bottleneck for random search; shape (batch_size, 1)
+            reward = api(query, r0, self.device).flatten()  # bottleneck for random search;
             
-            x[i * batch_size : (i+1) * batch_size], \
-                y[i * batch_size : (i+1) * batch_size] = query, reward
+            x[1+i * batch_size : 1 + (i+1) * batch_size], \
+                y[1+i * batch_size : 1 + (i+1) * batch_size] = query, reward
                 
         return x, y
 
