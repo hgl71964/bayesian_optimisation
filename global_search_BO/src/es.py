@@ -2,7 +2,7 @@ import torch as tr
 import copy
 
 
-class evolutional_strategy:
+class evolutionary_strategy:
 
     def __init__(self):
         pass
@@ -14,6 +14,8 @@ class evolutional_strategy:
 
         
         return 
+
+
 
 
 class random_opt:
