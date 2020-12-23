@@ -2,6 +2,7 @@ import concurrent.futures
 import logging
 import threading
 import time
+import asyncio
 
 # [rest of code]
 
@@ -14,6 +15,21 @@ def thread_function(name, before, after):
 
     return name
 
+
+
+    
+
+async def count():
+    print("One")
+    await asyncio.sleep(1)
+    print("Two")
+
+async def main():
+    await asyncio.gather(count(), count(), count())
+
+
+
+
 if __name__ == "__main__":
     format = "%(asctime)s: %(message)s"
     logging.basicConfig(format=format, level=logging.INFO,
@@ -25,6 +41,14 @@ if __name__ == "__main__":
     print(ans)
     for i in ans:
         print(i)
+
+    
+
+    # benchmark async io
+    s = time.perf_counter()
+    asyncio.run(main())
+    elapsed = time.perf_counter() - s
+    print(f"{__file__} executed in {elapsed:0.2f} seconds."
 
 
 # import logging
