@@ -12,12 +12,8 @@ def thread_function(name, before, after):
     time.sleep(5)
     print(after)
     logging.info("Thread %s: finishing", name)
-
     return name
 
-
-
-    
 
 async def count():
     print("One")
@@ -36,14 +32,10 @@ if __name__ == "__main__":
                         datefmt="%H:%M:%S")
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:  # context manager will apply join method in the end
-        ans = executor.map(thread_function, ("a", "b", "c"), range(1,4), [7,8,9])
-
-    print(ans)
-    for i in ans:
-        print(i)
+        for i, ans in enumerate(executor.map(thread_function, ("a", "b", "c"), range(1,4), [7,8,9])):
+            print(ans))
 
     
-
     # benchmark async io
     s = time.perf_counter()
     asyncio.run(main())
