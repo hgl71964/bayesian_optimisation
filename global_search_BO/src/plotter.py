@@ -80,7 +80,7 @@ class convergent_plot:
 
 
         ax.set_title("Convergent plots", fontsize=14)
-        ax.set_xlabel("Number of evaluations", fontsize = 12)
+        ax.set_xlabel("Number of iteration", fontsize = 12)
         ax.set_ylabel("Rewards", fontsize = 12)
         ax.legend(prop={'size':12})
         plt.show()
