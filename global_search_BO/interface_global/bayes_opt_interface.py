@@ -6,7 +6,7 @@ import copy
 import torch as tr
 
 # import scripts 
-from ..src.bayes_opt import bayesian_optimiser
+# from ..src.bayes_opt import bayesian_optimiser
 from ..src.api_helper import api_utils
 
 device = tr.device("cuda" if tr.cuda.is_available() else "cpu")
