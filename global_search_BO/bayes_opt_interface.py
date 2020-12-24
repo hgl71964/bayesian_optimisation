@@ -56,6 +56,8 @@ def bayes_loop(loss_func: callable,
 
     x0 = deepcopy(init_queries)
     y0 = init_query(x0, loss_func, size)
+
+    
     # TODO 1. decorate api
 
     return x0, y0 
