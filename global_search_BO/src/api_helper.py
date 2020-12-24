@@ -38,6 +38,24 @@ class api_utils:
 
         return wrapper
 
+    @staticmethod
+    def init_query(
+                x0: np.ndarray,  # initial queries 
+                loss_func: callable, 
+                size: int,  # number of parallel queries
+                ):
+        y0 = tr.empty((size, 1))
+        with concurrent.futures.ThreadPoolExecutor(max_workers=size) as executor:
+                for i, r in enumerate(executor.map(loss_func, 
+                                        x0,  
+                                        range(size),   #  index for loss function
+                                        0,             #  the initial iteration
+                                        )):
+                        
+                    y0[i] = r
+        return y0
+
+
 def qpso(loss_f, size, ranges, logger, init_particles=None, iteration=100, g=0.8):
     """
     QPSO algorithm implemetation.

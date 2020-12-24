@@ -1,14 +1,12 @@
 import numpy as np
-import sys
-import os
 from copy import deepcopy
-import matplotlib.pyplot as plt
 import torch as tr
 import concurrent.futures
 
 # import scripts 
 from ..src.bayes_opt import bayesian_optimiser
 from ..src.api_helper import api_utils
+
 
 device = tr.device("cuda" if tr.cuda.is_available() else "cpu")
 dtype = tr.float32
@@ -55,9 +53,9 @@ def bayes_loop(loss_func: callable,
     bayes_opt = bayesian_optimiser(gp_name, gp_params, device, acq_params)
 
     x0 = deepcopy(init_queries)
-    y0 = init_query(x0, loss_func, size)
+    y0 = api_utils.init_query(x0, loss_func, size)
 
-    
+
     # TODO 1. decorate api
 
     return x0, y0 
@@ -67,16 +65,5 @@ def bayes_loop(loss_func: callable,
 
 
 
-def init_query(init_queries, loss_func, size):
-    y0 = tr.empty((size, 1))
-    with concurrent.futures.ThreadPoolExecutor(max_workers=size) as executor:
-            for i, r in enumerate(executor.map(loss_func, 
-                                    init_queries,  #  apply initial query
-                                    range(size),   #  index for loss function
-                                    0,             #  the initial iteration
-                                    )):
-                        
-                y0[i] = r
-    return y0
 
 
