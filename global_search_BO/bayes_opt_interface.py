@@ -2,8 +2,8 @@ import numpy as np
 import sys
 import os
 import matplotlib.pyplot as plt
-import copy
 import torch as tr
+import concurrent.futures
 
 # import scripts 
 from ..src.bayes_opt import bayesian_optimiser
@@ -41,11 +41,9 @@ acq_params = {
     "beta":1.,                   # used by UCB/qUCB
             }
 
-
-
 """hyperparameter for bayes_opt"""
 
-def bayes_loop(loss: callable,
+def bayes_loop(loss_func: callable,
             size: int,
             search_bounds: np.ndarray,
             logger,  # TODO change this 
@@ -53,14 +51,19 @@ def bayes_loop(loss: callable,
             iteration: int, 
             ):
 
-    bayes_opt = bayesian_optimiser(gp_name, gp_params, device, acq_params)
+        bayes_opt = bayesian_optimiser(gp_name, gp_params, device, acq_params)
 
-    # TODO
+        # TODO 1. decorate api; 2. init_query
+        x0, y0 = init_query(init_queries, loss_func)
 
-    xs, ys = bayes_opt.outer_loop(T, (-4,4), x0, y0, r0, api, batch_size)  # maximising reward
+        api = wrapper(loss_func)
+
+        xs, ys = bayes_opt.outer_loop(T, search_bounds, x0, y0, r0, api, batch_size)  # maximising reward
 
 
 
+def init_query(init_queries, loss_func):
 
+        return x0, y0
 
 
