@@ -52,29 +52,29 @@ def bayes_loop(loss_func: callable,
             iteration: int, 
             ):
 
-        bayes_opt = bayesian_optimiser(gp_name, gp_params, device, acq_params)
+    bayes_opt = bayesian_optimiser(gp_name, gp_params, device, acq_params)
 
-        x0 = deepcopy(init_queries)
-        y0 = init_query(x0, loss_func, size)
-        # TODO 1. decorate api
+    x0 = deepcopy(init_queries)
+    y0 = init_query(x0, loss_func, size)
+    # TODO 1. decorate api
 
-        return x0, y0 
-        # api = wrapper(loss_func)
+    return x0, y0 
+    # api = wrapper(loss_func)
 
-        # xs, ys = bayes_opt.outer_loop(T, search_bounds, x0, y0, r0, api, batch_size)  # maximising reward
+    # xs, ys = bayes_opt.outer_loop(T, search_bounds, x0, y0, r0, api, batch_size)  # maximising reward
 
 
 
 def init_query(init_queries, loss_func, size):
-        y0 = tr.empty((size, 1))
-        with concurrent.futures.ThreadPoolExecutor(max_workers=size) as executor:
-                for i, r in enumerate(executor.map(loss_func, 
-                                        init_queries,  #  apply initial query
-                                        range(size),   #  index for loss function
-                                        0,             #  the initial iteration
-                                        )):
+    y0 = tr.empty((size, 1))
+    with concurrent.futures.ThreadPoolExecutor(max_workers=size) as executor:
+            for i, r in enumerate(executor.map(loss_func, 
+                                    init_queries,  #  apply initial query
+                                    range(size),   #  index for loss function
+                                    0,             #  the initial iteration
+                                    )):
                         
-                        y0[i] = r
-        return y0
+                y0[i] = r
+    return y0
 
 
