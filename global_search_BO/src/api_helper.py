@@ -40,7 +40,7 @@ class api_utils:
                 loss_func: callable, 
                 size: int,  # number of parallel queries
                 ):
-        y0 = tr.empty((size, 1))
+        y0 = tr.empty((size, 1), dtype=tr.float32)
         with concurrent.futures.ThreadPoolExecutor(max_workers=size) as executor:
                 for i, r in enumerate(executor.map(loss_func, 
                                         x0,  
