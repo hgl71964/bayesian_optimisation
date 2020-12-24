@@ -1,7 +1,6 @@
 import numpy as np
 from copy import deepcopy
 import torch as tr
-import concurrent.futures
 
 # import scripts 
 from ..src.bayes_opt import bayesian_optimiser
