@@ -35,7 +35,6 @@ class api_utils:
                     break
 
             return neg_rewards.view(-1, 1).to(device)  # assume dtype == torch.float() overall
-
         return wrapper
 
     @staticmethod

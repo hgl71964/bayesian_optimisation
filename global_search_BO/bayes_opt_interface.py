@@ -7,7 +7,6 @@ import concurrent.futures
 from ..src.bayes_opt import bayesian_optimiser
 from ..src.api_helper import api_utils
 
-
 device = tr.device("cuda" if tr.cuda.is_available() else "cpu")
 dtype = tr.float32
 
@@ -54,13 +53,12 @@ def bayes_loop(loss_func: callable,
 
     x0 = deepcopy(init_queries)
     y0 = api_utils.init_query(x0, loss_func, size)
-
+    return x0, y0 
 
     # TODO 1. decorate api
-
-    return x0, y0 
     # api = wrapper(loss_func)
 
+    # TODO: adjust the bayesian loop
     # xs, ys = bayes_opt.outer_loop(T, search_bounds, x0, y0, r0, api, batch_size)  # maximising reward
 
 
