@@ -1,6 +1,7 @@
 import numpy as np
 import sys
 import os
+from copy import deepcopy
 import matplotlib.pyplot as plt
 import torch as tr
 import concurrent.futures
@@ -54,16 +55,27 @@ def bayes_loop(loss_func: callable,
         bayes_opt = bayesian_optimiser(gp_name, gp_params, device, acq_params)
 
         # TODO 1. decorate api; 2. init_query
-        x0, y0 = init_query(init_queries, loss_func)
+        x0 = deepcopy(init_queries)
+        y0 = init_query(x0, loss_func, size)
+        
+        return x0, y0 
+        # api = wrapper(loss_func)
 
-        api = wrapper(loss_func)
-
-        xs, ys = bayes_opt.outer_loop(T, search_bounds, x0, y0, r0, api, batch_size)  # maximising reward
+        # xs, ys = bayes_opt.outer_loop(T, search_bounds, x0, y0, r0, api, batch_size)  # maximising reward
 
 
 
-def init_query(init_queries, loss_func):
-
-        return x0, y0
+def init_query(init_queries, loss_func, size):
+        y0 = tr.empty((size, ))
+        with concurrent.futures.ThreadPoolExecutor(max_workers=size) as executor:
+                for i, r in enumerate(executor.map(loss_func, 
+                                        init_queries,  #  apply initial query
+                                        range(size),   #  index for loss function
+                                        0,             #  the initial iteration
+                                        )):
+                        
+                        # TODO store this
+                        y0[i] = r
+        return y0
 
 

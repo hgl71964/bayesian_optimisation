@@ -1,11 +1,16 @@
 import os
 import numpy as np
-from global_search_BO.interface_global import bayes_opt_interface 
+import concurrent.futures 
+from time import sleep
+import torch as tr
 
-print(os.getcwd())
 
-a = np.random.rand(2,)
+def some_func(name, number):
+    print(name)
+    sleep(1)
+    print(number)
+    sleep(1)
+    return name
 
-print(isinstance(a, np.ndarray))
-print(isinstance(a, tuple))
-
+if __name__ == "__main__":
+    print(tr.empty(10).shape)
