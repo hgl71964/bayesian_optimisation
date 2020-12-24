@@ -19,6 +19,4 @@ class helper:
 
     @staticmethod
     def stats(obj: dict):
-
-
         return None
