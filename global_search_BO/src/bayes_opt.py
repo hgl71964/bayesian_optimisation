@@ -2,7 +2,6 @@ import torch as tr
 import numpy as np
 import copy
 import time
-import datetime
 import botorch
 import gpytorch
 from . import GPs  #  this script should be imported as packages
@@ -24,7 +23,7 @@ class bayesian_optimiser:
 
     def outer_loop(self, 
                     T: int, # time_horizon 
-                    domain: tuple,  # variable domain, (0, 1)
+                    domain: tuple,  # variable domain, (0, 1) or np.ndarray if shape(n, 2)
                     x: tr.Tensor, # init samples; [n,d] -> n samples, d-dimensional
                     y: tr.Tensor, # shape shape [n,1]; 1-dimensional output
                     r0: float, # unormalised reward,
@@ -38,6 +37,8 @@ class bayesian_optimiser:
         """
         # assume bounds of variables are the same; shape [2,d]
         input_dim = x.shape[-1]
+
+        if 
         bounds = tr.tensor([[domain[0]] * input_dim, [domain[1]] * input_dim], \
                                     dtype=tr.float32).to(self.device)
 

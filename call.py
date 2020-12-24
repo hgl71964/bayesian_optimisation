@@ -1,9 +1,12 @@
 import os
-from global_search_BO.interface_global import bayes_opt 
+import numpy as np
+from global_search_BO.interface_global import bayes_opt_interface 
 
 
 print(os.getcwd())
 
-# print(bayes_opt.p())
+a = np.rand(2,2)
 
+print(isinstance(a, np.ndarray))
+print(isinstance(a, tuple))
 
