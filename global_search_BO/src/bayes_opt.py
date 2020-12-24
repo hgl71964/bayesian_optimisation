@@ -1,7 +1,6 @@
 import torch as tr
 import numpy as np
 import copy
-import time
 import botorch
 import gpytorch
 from . import GPs  #  this script should be imported as packages
@@ -43,7 +42,6 @@ class bayesian_optimiser:
                                     dtype=tr.float32).to(self.device)
 
         mll, model = self.gpr.init_model(x, y, state_dict=None)
-        # times = [None] * T
 
         for t in range(T):
 
@@ -63,7 +61,6 @@ class bayesian_optimiser:
 
             print(f"Iter: {t+1}, reward: {(reward.max()).item():,.2f}")
         
-        # print(f"acq_func average runtime per iteration {(sum(times)/len(times)):.1f}s")
         return x, y
 
     def _inner_loop(self, acq_func, batch_size, bounds):
@@ -134,6 +131,3 @@ class bayesian_optimiser:
 
     def _init_GPs(self,gp_name,gp_params, device):
         return GPs.BOtorch_GP(gp_name, device, **gp_params)
-
-if __name__ == "__main__":
-    print("test")
