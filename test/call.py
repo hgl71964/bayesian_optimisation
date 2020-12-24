@@ -13,4 +13,8 @@ def some_func(name, number):
     return name
 
 if __name__ == "__main__":
-    print(tr.empty(10).shape)
+    a=tr.empty((10, 1))
+    for i in range(10):
+        a[i]=i 
+
+    print(a)
