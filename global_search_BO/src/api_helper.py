@@ -46,7 +46,7 @@ class api_utils:
                 for i, r in enumerate(executor.map(loss_func, 
                                         x0,  
                                         range(size),   #  index for loss function
-                                        0,             #  the initial iteration
+                                        [0 for _ in size],             #  the initial iteration
                                         )):
                         
                     y0[i] = r
