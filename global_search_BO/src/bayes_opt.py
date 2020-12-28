@@ -37,11 +37,7 @@ class bayesian_optimiser:
         # assume bounds of variables are the same; shape [2,d]
         input_dim = x.shape[-1]
 
-        if isinstance(domain, tuple):
-            bounds = tr.tensor([[domain[0]] * input_dim, [domain[1]] * input_dim], \
-                                        dtype=tr.float32).to(self.device)
-        else:
-            bounds = tr.from_numpy(domain).float().to(self.device)
+        bounds = tr.from_numpy(domain).float().to(self.device)
 
         mll, model = self.gpr.init_model(x, y, state_dict=None)
 

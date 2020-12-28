@@ -47,6 +47,8 @@ def bayes_loop(loss_func: callable,
             device = tr.device("cpu"),  # change to gpu if possile 
             ):
 
+    global T, gp_name, gp_params, batch_size, acq_params  # TODO: change this 
+
     bayes_opt = bayesian_optimiser(gp_name, gp_params, device, acq_params)
 
     x0 = deepcopy(init_queries)
@@ -55,14 +57,10 @@ def bayes_loop(loss_func: callable,
     #  format the initial pair
     x0, y0 = tr.from_numpy(x0, dtype=dtype), -y0
 
-    api = api_utils.wrapper(loss_func)
+    #  decorate the api
+    api = api_utils.wrapper(loss_func); r0 = 0 
 
-
-
-    return x0, y0 
-
-    # TODO 1. decorate api
-    # api = wrapper(loss_func)
+    return bayes_opt.outer_loop(T, search_bounds, x0, y0, r0, api, batch_size)
 
     # TODO: adjust the bayesian loop
     # xs, ys = bayes_opt.outer_loop(T, search_bounds, x0, y0, r0, api, batch_size)  # maximising reward
@@ -70,4 +68,6 @@ def bayes_loop(loss_func: callable,
 
 
 
-
+def test():
+    global T, batch_size
+    print(T, batch_size)
