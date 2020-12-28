@@ -46,10 +46,10 @@ class api_utils:
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=q) as executor:
             for i, r in enumerate(executor.map(loss_func, 
-                                x0,             # initial queries
-                                range(q),       #  index for loss function
-                                [0]*q,          #  0-th iteration (list comprehension fails)
-                                )):
+                                                x0,             
+                                                range(q),       #  index 
+                                                [0]*q,          #  0-th iteration (list comprehension fails)
+                                                )):
                 #  r: tuple; r[0] = L2-norm, r[1] = cosine similarity
                 y0[i] = -r[1]  # TODO: determine which metric to use 
         return y0
@@ -61,5 +61,4 @@ class api_utils:
         for i in range(size):
             for j, r in enumerate(search_bounds):
                 x0[i][j] = np.random.uniform(search_bounds[j][0], search_bounds[j][1])
-
         return x0
