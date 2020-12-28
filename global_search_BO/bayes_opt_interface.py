@@ -37,7 +37,7 @@ acq_params = {
 def bayes_loop(loss_func: callable,
             iteration: int,  # time horison
             size: int,  # q-parallelism (if use analytical acq_func, q must be 1)
-            search_bounds: np.ndarray,  # shape: ((n, 2))
+            search_bounds: np.ndarray,  # shape: ((2, d))
             logger,  # TODO change this 
             device = tr.device("cpu"),  # change to gpu if possile 
             ):
@@ -56,4 +56,4 @@ def bayes_loop(loss_func: callable,
     #  decorate the api
     api = api_utils.wrapper(loss_func); r0 = 0; # TODO think about normalisation
 
-    return bayes_opt.outer_loop(iteration, search_bounds.T, x0, y0, r0, api, size)
+    return bayes_opt.outer_loop(iteration, search_bounds, x0, y0, r0, api, size)

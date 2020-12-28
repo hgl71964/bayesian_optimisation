@@ -22,7 +22,7 @@ class bayesian_optimiser:
 
     def outer_loop(self, 
                     T: int, # time_horizon 
-                    domain: np.ndarray,  # variable domain, shape(2, n) 
+                    domain: np.ndarray,  # variable domain, shape(2, d) 
                     x: tr.Tensor, # init samples; [n,d] -> n samples, d-dimensional
                     y: tr.Tensor, # shape shape [n,1]; 1-dimensional output
                     r0: float, # unormalised reward,
@@ -35,7 +35,7 @@ class bayesian_optimiser:
             x,y: collection of queries and rewards; torch.tensor
         """
         input_dim = x.shape[-1]
-        bounds = tr.from_numpy(domain.T).float().to(self.device)  # TODO: normalise bounds 
+        bounds = tr.from_numpy(domain).float().to(self.device)  # TODO: normalise bounds 
 
         print("the bound is: ", bounds)
 
