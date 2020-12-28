@@ -37,8 +37,6 @@ class bayesian_optimiser:
         input_dim = x.shape[-1]
         bounds = tr.from_numpy(domain).float().to(self.device)  # TODO: normalise bounds 
 
-        print("the bound is: ", bounds)
-
         mll, model = self.gpr.init_model(x, y, state_dict=None)
 
         for t in range(T):
