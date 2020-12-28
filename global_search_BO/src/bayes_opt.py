@@ -34,9 +34,7 @@ class bayesian_optimiser:
         Returns:
             x,y: collection of queries and rewards; torch.tensor
         """
-        # assume bounds of variables are the same; shape [2,d]
         input_dim = x.shape[-1]
-
         bounds = tr.from_numpy(domain).float().to(self.device)
 
         mll, model = self.gpr.init_model(x, y, state_dict=None)

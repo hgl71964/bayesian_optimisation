@@ -16,13 +16,14 @@ class api_utils:
             Returns:
                 neg_rewards: [q, 1]
             """
-            x = x.cpu().numpy(); q = x.shape[0]; neg_rewards = tr.empty((q, 1))
+            x = x.cpu().numpy(); q = x.shape[0]; neg_rewards = tr.empty((q, 1), dtype=tr.float32)
 
             for _ in range(5):  # handle potential network disconnection issue
                 try:
                     with concurrent.futures.ThreadPoolExecutor(max_workers=q) as executor:
                         for i, r in enumerate(executor.map(api_func, x)):  # multi-threading
-                            neg_rewards[i] = -r  # TODO: think about how to normalise the rewards  
+                            #  r: tuple; r[0] = L2-norm, r[1] = cosine similarity
+                            neg_rewards[i] = -r[1]  # TODO: 1. how to normalise the rewards; 2. which metric to use
 
                 except TypeError as ter:
                     print(f"api has error {ter}")
@@ -50,5 +51,5 @@ class api_utils:
                                 [0]*size,      #  the initial iteration (list comprehension fails)
                                 )):
                 #  r: tuple; r[0] = L2-norm, r[1] = cosine similarity
-                y0[i] = r[1]  # TODO: determine which metric to use 
+                y0[i] = -r[1]  # TODO: determine which metric to use 
         return y0

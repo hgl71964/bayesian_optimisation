@@ -51,20 +51,16 @@ def bayes_loop(loss_func: callable,
 
     bayes_opt = bayesian_optimiser(gp_name, gp_params, device, acq_params)
 
-    x0 = deepcopy(init_queries)
-    y0 = api_utils.init_query(x0, loss_func, size)
+    #  each run is a fresh copy
+    x0 = deepcopy(init_queries); y0 = api_utils.init_query(x0, loss_func, size)
 
     #  format the initial pair
-    x0, y0 = tr.from_numpy(x0, dtype=dtype), -y0
+    x0, y0 = tr.from_numpy(x0).float().to(device), y0.to(device)
 
     #  decorate the api
     api = api_utils.wrapper(loss_func); r0 = 0 
 
     return bayes_opt.outer_loop(T, search_bounds, x0, y0, r0, api, batch_size)
-
-    # TODO: adjust the bayesian loop
-    # xs, ys = bayes_opt.outer_loop(T, search_bounds, x0, y0, r0, api, batch_size)  # maximising reward
-
 
 
 
