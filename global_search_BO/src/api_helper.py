@@ -44,10 +44,10 @@ class api_utils:
         y0 = tr.empty((size, 1), dtype=tr.float32)
         with concurrent.futures.ThreadPoolExecutor(max_workers=size) as executor:
                 for i, r in enumerate(executor.map(loss_func, 
-                                        x0,  
-                                        range(size),   #  index for loss function
+                                        x0,             # initial queries
+                                        range(size),    #  index for loss function
                                         [0 for _ in size],             #  the initial iteration
-                                        )):
+                                    )):
                         
                     y0[i] = r
         return y0
