@@ -42,19 +42,12 @@ class api_utils:
                 size: int,  # number of parallel queries
                 ):
         y0 = tr.empty((size, 1), dtype=tr.float32)
-        index = range(size)
-        interation = [0]*size
-
-        print(index)
-        print(interation)
-        print(loss_func)
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=size) as executor:
             for i, r in enumerate(executor.map(loss_func, 
                                 x0,                     # initial queries
                                 range(size),            #  index for loss function
-                                [0]*size,      #  the initial iteration
-                                # range(size),
+                                [0]*size,      #  the initial iteration (list comprehension fails)
                                 )):
                 y0[i] = r
         return y0
