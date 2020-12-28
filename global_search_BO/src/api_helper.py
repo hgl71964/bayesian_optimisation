@@ -41,17 +41,16 @@ class api_utils:
                 loss_func: callable, 
                 size: int,  # number of parallel queries
                 ):
-        # y0 = tr.empty((size, 1), dtype=tr.float32)
+        y0 = tr.empty((size, 1), dtype=tr.float32)
 
-        y0 = []
         with concurrent.futures.ThreadPoolExecutor(max_workers=size) as executor:
             for i, r in enumerate(executor.map(loss_func, 
                                 x0,                     # initial queries
                                 range(size),            #  index for loss function
                                 [0]*size,      #  the initial iteration (list comprehension fails)
                                 )):
-                print(r)
-                y0.append(r)
+                #  r: tuple; r[0] = L2-norm, r[1] = cosine similarity
+                y0[i] = r[1]
         return y0
 
 
