@@ -264,7 +264,8 @@ class ParamsParticle(Partices):
         self.dest_path = dest_path
         self.id = id_
         self.title = title
-        self.criteria = criteria
+        # self.criteria = criteria
+        self.criteria = None
         self.fit_args = dict()
 
     def fit(self):
