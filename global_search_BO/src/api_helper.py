@@ -50,6 +50,7 @@ class api_utils:
                                 [0]*size,      #  the initial iteration (list comprehension fails)
                                 )):
                 #  r: tuple; r[0] = L2-norm, r[1] = cosine similarity
+                print(r)
                 y0[i] = r[1]  # TODO: determine which metric to use 
         return y0
 
