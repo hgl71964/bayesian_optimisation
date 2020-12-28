@@ -15,36 +15,16 @@ provide interface like this:
 bayes_opt(loss, iteration, size, search_bounds, logger, device)
 """
 
-# gp; includes "MA2.5", "SE", "RQ", "LR", "PO"
-gp_name, gp_params = "MA2.5", {
-                            "mode": "raw",      # "raw", "add", "pro" for GPs
-                            "opt":"ADAM",  # opt for MLE; (quasi_newton, ADAM)
-                            "epochs":128,       # epoch to run, if chosen ADAM
-                            "lr":1e-1,          # learning rate for ADAM
-                            }
-
-acq_params = { 
-    "acq_name" : "qEI",          # acqu func; includes: "EI", "UCB", "qEI", "qUCB", "qKG"
-    "N_start": 32,               # number of starts for multi-start SGA
-    "raw_samples" :512,          # heuristic initialisation 
-    "N_MC_sample" : 256,         # number of samples for Monte Carlo simulation
-    "num_fantasies": 128,        # number of fantasies used by KG
-    "beta":1.,                   # used by UCB/qUCB
-            }
-
-"""hyperparameter for bayes_opt"""
-
 def bayes_loop(loss_func: callable,
             iteration: int,  # time horison
             size: int,  # q-parallelism (if use analytical acq_func, q must be 1)
             search_bounds: np.ndarray,  # shape: ((2, d))
             logger,  # TODO change this 
+            gp_name,
+            gp_params,
+            acq_params,
             device = tr.device("cpu"),  # change to gpu if possile 
             ):
-    """format hyper-parameters"""
-    global  gp_name, gp_params, acq_params  # TODO: change this 
-    """end of format hyper-parameters"""
-
     bayes_opt = bayesian_optimiser(gp_name, gp_params, device, acq_params)
 
     # get x0, y0

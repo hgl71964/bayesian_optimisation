@@ -62,3 +62,8 @@ class api_utils:
             for j, r in enumerate(search_bounds):
                 x0[i][j] = np.random.uniform(search_bounds[j][0], search_bounds[j][1])
         return x0
+
+
+    @staticmethod
+    def normalise_bound(mode):
+        return None
