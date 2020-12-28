@@ -3,6 +3,11 @@ import numpy as np
 import torch as tr
 
 
+class normaliser:
+    """provide normalisation for query and reward"""
+    pass
+
+
 class helper:
 
     @staticmethod
