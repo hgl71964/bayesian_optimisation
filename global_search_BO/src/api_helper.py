@@ -64,7 +64,3 @@ class api_utils:
         return x0
 
 
-class normaliser:
-    """provide normalisation for query and reward"""
-
-    pass
