@@ -26,7 +26,7 @@ class bayesian_optimiser:
                     x: tr.Tensor, # init samples; [n,d] -> n samples, d-dimensional
                     y: tr.Tensor, # shape shape [n,1]; 1-dimensional output
                     r0: float, # unormalised reward,
-                    api: callable,  #  reward = api(query, r0, device)
+                    api: callable,  #  for signature see api_utlis
                     batch_size: int, #  q-parallelism
                     ):
         """
@@ -49,7 +49,7 @@ class bayesian_optimiser:
             query = self._inner_loop(acq, batch_size, bounds)
 
             # reward
-            reward = api(query, r0, self.device)
+            reward = api(query, r0, t, self.device)
 
             # append available data && update model
             x, y = tr.cat([x, query]), tr.cat([y, reward])

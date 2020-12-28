@@ -10,6 +10,7 @@ class api_utils:
     def wrapper(api_func: callable):  #  IO bound
         def wrapper(x: tr.tensor,  #  shape[q,d]; q query, d-dimensional
                 r0: float,  #  unormalised reward
+                iteration: int,  
                 device: str,
                 ):
             """
@@ -21,7 +22,12 @@ class api_utils:
             for _ in range(5):  # handle potential network disconnection issue
                 try:
                     with concurrent.futures.ThreadPoolExecutor(max_workers=q) as executor:
-                        for i, r in enumerate(executor.map(api_func, x)):  # multi-threading
+                        for i, r in enumerate(executor.map(api_func, 
+                                                        x,
+                                                        range(q),
+                                                        [iteration] * q,  
+                                                        )): 
+
                             #  r: tuple; r[0] = L2-norm, r[1] = cosine similarity
                             neg_rewards[i] = -r[1]  # TODO: 1. how to normalise the rewards; 2. which metric to use
 
@@ -40,15 +46,14 @@ class api_utils:
     def init_query(
                 x0: np.ndarray,  # initial queries 
                 loss_func: callable, 
-                size: int,  # number of parallel queries
                 ):
-        y0 = tr.empty((size, 1), dtype=tr.float32)
+        q = x0.shape[0]; y0 = tr.empty((q, 1), dtype=tr.float32)
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=size) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=q) as executor:
             for i, r in enumerate(executor.map(loss_func, 
                                 x0,                     # initial queries
-                                range(size),            #  index for loss function
-                                [0]*size,      #  the initial iteration (list comprehension fails)
+                                range(q),            #  index for loss function
+                                [0]*q,      #  the initial iteration (list comprehension fails)
                                 )):
                 #  r: tuple; r[0] = L2-norm, r[1] = cosine similarity
                 y0[i] = -r[1]  # TODO: determine which metric to use 

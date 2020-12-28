@@ -14,8 +14,7 @@ provide interface like this:
 
 bayes_opt(loss, size, search_bounds, logger, init_queries, iteration)
 """
-# hyperparameters
-T = 30  # total number of iterations
+
 
 # gp; includes "MA2.5", "SE", "RQ", "LR", "PO"
 gp_name, gp_params = "MA2.5", {
@@ -24,8 +23,6 @@ gp_name, gp_params = "MA2.5", {
                             "epochs":128,       # epoch to run, if chosen ADAM
                             "lr":1e-1,          # learning rate for ADAM
                             }
-# q-parallelism (if use analytical acq_func, q must be 1)
-batch_size = 2
 
 acq_params = { 
     "acq_name" : "qEI",          # acqu func; includes: "EI", "UCB", "qEI", "qUCB", "qKG"
@@ -39,20 +36,21 @@ acq_params = {
 """hyperparameter for bayes_opt"""
 
 def bayes_loop(loss_func: callable,
-            size: int,
+            size: int,  # q-parallelism (if use analytical acq_func, q must be 1)
             search_bounds: np.ndarray,
             logger,  # TODO change this 
             init_queries: np.ndarray,
-            iteration: int, 
+            iteration: int,  # time horison
             device = tr.device("cpu"),  # change to gpu if possile 
             ):
-
-    global T, gp_name, gp_params, batch_size, acq_params  # TODO: change this 
+    """format hyper-parameters"""
+    global  gp_name, gp_params, acq_params  # TODO: change this 
+    """end of format hyper-parameters"""
 
     bayes_opt = bayesian_optimiser(gp_name, gp_params, device, acq_params)
 
     #  each run is a fresh copy
-    x0 = deepcopy(init_queries); y0 = api_utils.init_query(x0, loss_func, size)
+    x0 = deepcopy(init_queries); y0 = api_utils.init_query(x0, loss_func)
 
     #  format the initial pair
     x0, y0 = tr.from_numpy(x0).float().to(device), y0.to(device)
@@ -60,10 +58,4 @@ def bayes_loop(loss_func: callable,
     #  decorate the api
     api = api_utils.wrapper(loss_func); r0 = 0 
 
-    return bayes_opt.outer_loop(T, search_bounds, x0, y0, r0, api, batch_size)
-
-
-
-def test():
-    global T, batch_size
-    print(T, batch_size)
+    return bayes_opt.outer_loop(iteration, search_bounds, x0, y0, r0, api, size)
