@@ -43,7 +43,7 @@ class api_utils:
                 ):
         y0 = tr.empty((size, 1), dtype=tr.float32)
         index = range(size)
-        interation = [0 for _ in range(size)]
+        interation = [0]*size
 
         print(index)
         print(interation)
