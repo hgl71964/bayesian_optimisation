@@ -64,6 +64,7 @@ class api_utils:
         return x0
 
 
-    @staticmethod
-    def normalise_bound(mode):
-        return None
+class normaliser:
+    """provide normalisation for query and reward"""
+
+    pass
