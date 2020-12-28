@@ -12,7 +12,7 @@ import this script as a package
 
 provide interface like this:
 
-bayes_opt(loss, size, search_bounds, logger, init_queries, iteration)
+bayes_opt(loss, iteration, size, search_bounds, logger, device)
 """
 
 # gp; includes "MA2.5", "SE", "RQ", "LR", "PO"
