@@ -3,8 +3,8 @@ from copy import deepcopy
 import torch as tr
 
 # import scripts 
-from ..src.bayes_opt import bayesian_optimiser
-from ..src.api_helper import api_utils
+from .src.bayes_opt import bayesian_optimiser
+from .src.api_helper import api_utils
 
 device = tr.device("cuda" if tr.cuda.is_available() else "cpu")
 dtype = tr.float32
