@@ -41,18 +41,25 @@ class api_utils:
         return wrapper
     
     @staticmethod
-    def init_query(
-                x0: np.ndarray,  # initial queries 
-                loss_func: callable, 
-                ):
+    def init_reward(x0: np.ndarray, loss_func: callable):
         q = x0.shape[0]; y0 = tr.empty((q, 1), dtype=tr.float32); 
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=q) as executor:
             for i, r in enumerate(executor.map(loss_func, 
-                                x0,                     # initial queries
-                                range(q),            #  index for loss function
-                                [0]*q,      #  the initial iteration (list comprehension fails)
+                                x0,             # initial queries
+                                range(q),       #  index for loss function
+                                [0]*q,          #  0-th iteration (list comprehension fails)
                                 )):
                 #  r: tuple; r[0] = L2-norm, r[1] = cosine similarity
                 y0[i] = -r[1]  # TODO: determine which metric to use 
         return y0
+
+    @staticmethod
+    def init_query(size, search_bounds):
+        """make initial query"""
+        x0 = np.empty((size, len(search_bounds)))
+        for i in range(size):
+            for j, r in enumerate(search_bounds):
+                x0[i][j] = np.random.uniform(search_bounds[j][0], search_bounds[j][1])
+
+        return x0

@@ -35,11 +35,11 @@ acq_params = {
 """hyperparameter for bayes_opt"""
 
 def bayes_loop(loss_func: callable,
-            size: int,  # q-parallelism (if use analytical acq_func, q must be 1)
-            search_bounds: np.ndarray,
-            logger,  # TODO change this 
-            init_queries: np.ndarray,
             iteration: int,  # time horison
+            size: int,  # q-parallelism (if use analytical acq_func, q must be 1)
+            search_bounds: np.ndarray,  # shape: ((n, 2))
+            logger,  # TODO change this 
+            init_queries: np.ndarray,  # initial x0 
             device = tr.device("cpu"),  # change to gpu if possile 
             ):
     """format hyper-parameters"""
@@ -48,8 +48,9 @@ def bayes_loop(loss_func: callable,
 
     bayes_opt = bayesian_optimiser(gp_name, gp_params, device, acq_params)
 
-    #  each run is a fresh copy
-    x0 = deepcopy(init_queries); y0 = api_utils.init_query(x0, loss_func)
+
+    # get x0, y0
+    x0 = api_utils.init_query(size, search_bounds); y0 = api_utils.init_reward(x0, loss_func);
 
     #  format the initial pair
     x0, y0 = tr.from_numpy(x0).float().to(device), y0.to(device)
