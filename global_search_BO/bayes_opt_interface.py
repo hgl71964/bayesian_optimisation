@@ -5,8 +5,6 @@ import torch as tr
 # import scripts 
 from .src.bayes_opt import bayesian_optimiser
 from .src.api_helper import api_utils
-
-device = tr.device("cuda" if tr.cuda.is_available() else "cpu")
 dtype = tr.float32
 
 """
@@ -46,12 +44,21 @@ def bayes_loop(loss_func: callable,
             logger,  # TODO change this 
             init_queries: np.ndarray,
             iteration: int, 
+            device = tr.device("cpu"),  # change to gpu if possile 
             ):
 
     bayes_opt = bayesian_optimiser(gp_name, gp_params, device, acq_params)
 
     x0 = deepcopy(init_queries)
     y0 = api_utils.init_query(x0, loss_func, size)
+
+    #  format the initial pair
+    x0, y0 = tr.from_numpy(x0, dtype=dtype), -y0
+
+    api = api_utils.wrapper(loss_func)
+
+
+
     return x0, y0 
 
     # TODO 1. decorate api
