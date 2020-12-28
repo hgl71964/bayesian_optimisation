@@ -56,4 +56,4 @@ def bayes_loop(loss_func: callable,
     #  decorate the api
     api = api_utils.wrapper(loss_func); r0 = 0; # TODO think about normalisation
 
-    return bayes_opt.outer_loop(iteration, search_bounds, x0, y0, r0, api, size)
+    return bayes_opt.outer_loop(iteration, search_bounds.T, x0, y0, r0, api, size)
