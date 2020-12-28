@@ -15,7 +15,6 @@ provide interface like this:
 bayes_opt(loss, size, search_bounds, logger, init_queries, iteration)
 """
 
-
 # gp; includes "MA2.5", "SE", "RQ", "LR", "PO"
 gp_name, gp_params = "MA2.5", {
                             "mode": "raw",      # "raw", "add", "pro" for GPs

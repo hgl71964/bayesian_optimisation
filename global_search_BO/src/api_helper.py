@@ -17,7 +17,7 @@ class api_utils:
             Returns:
                 neg_rewards: [q, 1]
             """
-            x = x.cpu().numpy(); q = x.shape[0]; neg_rewards = tr.empty((q, 1), dtype=tr.float32)
+            x = x.cpu().numpy(); q = x.shape[0]; neg_rewards = tr.empty((q, 1), dtype=tr.float32); 
 
             for _ in range(5):  # handle potential network disconnection issue
                 try:
@@ -32,9 +32,7 @@ class api_utils:
                             neg_rewards[i] = -r[1]  # TODO: 1. how to normalise the rewards; 2. which metric to use
 
                 except TypeError as ter:
-                    print(f"api has error {ter}")
-                    print("query is:", repr(x))
-                    sleep(10)
+                    print(f"api has error {ter}"); print("query is:", repr(x)); sleep(10)
                 else:
                     break
 
@@ -47,7 +45,7 @@ class api_utils:
                 x0: np.ndarray,  # initial queries 
                 loss_func: callable, 
                 ):
-        q = x0.shape[0]; y0 = tr.empty((q, 1), dtype=tr.float32)
+        q = x0.shape[0]; y0 = tr.empty((q, 1), dtype=tr.float32); 
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=q) as executor:
             for i, r in enumerate(executor.map(loss_func, 
