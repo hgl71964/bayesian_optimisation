@@ -53,7 +53,7 @@ class api_utils:
             for i, r in enumerate(executor.map(loss_func, 
                                 x0,                     # initial queries
                                 range(size),            #  index for loss function
-                                [0 for _ in range(size)],      #  the initial iteration
+                                [0]*size,      #  the initial iteration
                                 # range(size),
                                 )):
                 y0[i] = r
@@ -101,22 +101,22 @@ class api_utils:
 #             print("Got Exception in update partices")
 #             print(e)
        
-#     with futures.ThreadPoolExecutor(max_workers=size) as executor:
-#         # calculate initial losses in parallel.
-#         future_to_loss = [executor.submit(loss_f, p, i, 0) for i, p in enumerate(particles)]
-#         particle_losses = [f.result() for f in future_to_loss]
-#         local_losses = particle_losses.copy()
-#         global_optimal = local_optimal[local_losses.index(min(local_losses))]
-#         logger.log_particle(particles, particle_losses, 0)
-#         logger.log_local_optimal(local_optimal, local_losses, 0)
-#         logger.log_global_optimal(global_optimal, min(local_losses), 0)
-#         for it in range(iteration):
-#             print("start of iteration: {}".format(it))
-#             # calculate global optimal based on local optimals
-#             # update all particles based on global and local optimals of last iteration in parallel.
-#             future_to_loss = [executor.submit(update_particles, i, global_optimal, it) for i in range(len(particles))]
-#             futures.wait(future_to_loss)
-#             global_optimal = local_optimal[local_losses.index(min(local_losses))]
-#             logger.log_particle(particles, particle_losses, it+1)
-#             logger.log_local_optimal(local_optimal, local_losses, it+1)
-#             logger.log_global_optimal(global_optimal, min(local_losses), it+1)
+    # with futures.ThreadPoolExecutor(max_workers=size) as executor:
+    #     # calculate initial losses in parallel.
+    #     future_to_loss = [executor.submit(loss_f, p, i, 0) for i, p in enumerate(particles)]
+    #     particle_losses = [f.result() for f in future_to_loss]
+    #     local_losses = particle_losses.copy()
+    #     global_optimal = local_optimal[local_losses.index(min(local_losses))]
+    #     logger.log_particle(particles, particle_losses, 0)
+    #     logger.log_local_optimal(local_optimal, local_losses, 0)
+    #     logger.log_global_optimal(global_optimal, min(local_losses), 0)
+    #     for it in range(iteration):
+    #         print("start of iteration: {}".format(it))
+    #         # calculate global optimal based on local optimals
+    #         # update all particles based on global and local optimals of last iteration in parallel.
+    #         future_to_loss = [executor.submit(update_particles, i, global_optimal, it) for i in range(len(particles))]
+    #         futures.wait(future_to_loss)
+    #         global_optimal = local_optimal[local_losses.index(min(local_losses))]
+    #         logger.log_particle(particles, particle_losses, it+1)
+    #         logger.log_local_optimal(local_optimal, local_losses, it+1)
+    #         logger.log_global_optimal(global_optimal, min(local_losses), it+1)
