@@ -4,7 +4,7 @@ from copy import deepcopy
 class evolutionary_strategy:
     """parallelising need multiple workers;
     this opt means to maximise the rewards from the api"""
-    
+
     def __init__(self, **kwargs):
         self.device = kwargs.get("device", tr.device("cpu"))
         self.population_size = kwargs.get("population_size", 100)
@@ -19,7 +19,7 @@ class evolutionary_strategy:
                 api: callable,  # return functional evaluation
                 ):
         x_opt = deepcopy(x0); q = x0.shape[-1]  # q: input dimension
-        x, y = tr.zeros((1+T, q)), tr.zeros((1+T, ))
+        x, y = tr.empty((1+T, q)), tr.empty((1+T, ))
         x[0], y[0] = x_opt, api(x_opt, r0, 0, self.device).flatten() 
 
         for i in range(1,T+1):
@@ -52,7 +52,7 @@ class random_opt:
                 batch_size: int,  # random search is highly parallisable
                 ):
         input_dim = x0.shape[-1]
-        x, y = tr.zeros((1+T * batch_size, input_dim)), tr.zeros((1+T*batch_size, ))
+        x, y = tr.empty((1+T * batch_size, input_dim)), tr.empty((1+T*batch_size, ))
         x[0], y[0] = x0, api(x0, r0, self.device).flatten() 
 
         r1, r2 = domain  # get the domain, r1 < r2
