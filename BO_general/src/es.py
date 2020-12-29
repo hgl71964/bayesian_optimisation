@@ -33,7 +33,7 @@ class evolutionary_strategy:
 
             reward = api(query, r0, self.device).flatten() # shape:(population_size, ); bottleneck!
             avg = (reward - tr.mean(reward)) / tr.std(reward)
-            x_opt -= x_opt + self.lr /(self.population_size*self.std) * (gause_noise.T@avg)
+            x_opt += self.lr /(self.population_size*self.std) * (gause_noise.T@avg)
 
             x[i], y[i] = x_opt, reward.max()  # TODO: we use max() as the reward in this round?
 
