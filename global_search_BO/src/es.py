@@ -33,6 +33,8 @@ class evolutionary_strategy:
             x_opt -= x_opt + self.lr /(self.population_size*self.std) * (gause_noise.T@avg)
 
             x[t], y[t] = x_opt, reward.max()  # TODO: we use max() as the reward in this round?
+            
+            print(f"Iter: {t+1}, reward: {(y[t]).item():,.2f}")
 
         return x, y
 
