@@ -1,9 +1,10 @@
 import torch as tr
-import copy
-
+from copy import deepcopy
 
 class evolutionary_strategy:
     """parallelising need multiple workers"""
+    """this means to maximise the rewards from the api"""
+
     def __init__(
                 self,
                 **kwargs,
@@ -20,18 +21,17 @@ class evolutionary_strategy:
                 r0: float,  # unormalised reward
                 api: callable,  # return functional evaluation
                 ):
-        """this means to maximise the rewards from the api"""
-        x_opt = copy.deepcopy(x0); input_dim = x0.shape[-1]
-        x, y = tr.zeros((1+T, input_dim)), tr.zeros((1+T, ))
-        x[0], y[0] = x_opt, api(x_opt, r0, self.device).flatten() 
+        x_opt = deepcopy(x0); q = x0.shape[-1]  # q: input dimension
+        x, y = tr.zeros((1+T, q)), tr.zeros((1+T, ))
+        x[0], y[0] = x_opt, api(x_opt, r0, 0, self.device).flatten() 
 
         for i in range(1,T+1):
 
-            query = x_opt.repeat(self.population_size, 1)  # shape:(population_size, input_dim)
+            query = x_opt.repeat(self.population_size, 1)  # shape:(population_size, q)
             gause_noise = tr.normal(0, self.std, (self.population_size, input_dim))
             query += gause_noise
 
-            reward = api(query, r0, self.device).flatten() # shape:(population_size, ); bottleneck!
+            reward = api(query, r0, t, self.device).flatten() # shape:(population_size, ); bottleneck!
             avg = (reward - tr.mean(reward)) / tr.std(reward)
             x_opt -= x_opt + self.lr /(self.population_size*self.std) * (gause_noise.T@avg)
 

@@ -1,5 +1,4 @@
 import numpy as np
-from copy import deepcopy
 import torch as tr
 
 # import scripts 
@@ -12,7 +11,8 @@ import this script as a package
 
 provide interface like this:
 
-bayes_opt(loss, iteration, size, search_bounds, logger, device)
+bayes_opt(loss, iteration, size, search_bounds, logger,
+                                 gp_name, gp_params, acq_params,device)
 """
 
 def bayes_loop(loss_func: callable,
