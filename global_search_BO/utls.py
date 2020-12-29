@@ -269,6 +269,8 @@ class ParamsParticle(Partices):
         self.fit_args = dict()
 
     def fit(self):
+        id_ = int(self.id.split("_")[-1])
+        time.sleep(id_)
         testing_params = {p:v for (p, v) in zip(self.params, self.value)}
         self.pred_model = create_job(self.template, self.dest_path, runfile_params=testing_params,
                                      num=self.id, title=self.title)
