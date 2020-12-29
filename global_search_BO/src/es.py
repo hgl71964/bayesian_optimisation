@@ -2,13 +2,10 @@ import torch as tr
 from copy import deepcopy
 
 class evolutionary_strategy:
-    """parallelising need multiple workers"""
-    """this means to maximise the rewards from the api"""
-
-    def __init__(
-                self,
-                **kwargs,
-                ):
+    """parallelising need multiple workers;
+    this opt means to maximise the rewards from the api"""
+    
+    def __init__(self, **kwargs):
         self.device = kwargs.get("device", tr.device("cpu"))
         self.population_size = kwargs.get("population_size", 100)
         self.std = kwargs.get("std", 1e-1)
