@@ -5,9 +5,9 @@ class evolutionary_strategy:
     """parallelising need multiple workers;
     this opt means to maximise the rewards from the api"""
 
-    def __init__(self, **kwargs):
+    def __init__(self, size: int, **kwargs):
+        self.population_size = size
         self.device = kwargs.get("device", tr.device("cpu"))
-        self.population_size = kwargs.get("population_size", 100)
         self.std = kwargs.get("std", 1e-1)
         self.lr = kwargs.get("lr", 1e-3)
 
@@ -18,17 +18,17 @@ class evolutionary_strategy:
                 r0: float,  # unormalised reward
                 api: callable,  # return functional evaluation
                 ):
-        x_opt = deepcopy(x0); q = x0.shape[-1]  # q: input dimension
-        x, y = tr.empty((1+T, q)), tr.empty((1+T, ))
-        x[0], y[0] = x_opt, api(x_opt, r0, 0, self.device).flatten() 
+        x_opt = deepcopy(x0); input_dim = x0.shape[-1]  
+        x, y = tr.empty((1+T, input_dim )), tr.empty((1+T, ))
+        x[0], y[0] = x_opt, api(x_opt, r0, 0, self.device).flatten().max()
 
         for t in range(1,T+1):
 
-            query = x_opt.repeat(self.population_size, 1)  # shape:(population_size, q)
-            gause_noise = tr.normal(0, self.std, (self.population_size, q))
+            query = x_opt.repeat(self.population_size, 1)  # shape:(population_size, input_dim)
+            gause_noise = tr.normal(0, self.std, (self.population_size, input_dim))
             query += gause_noise
 
-            reward = api(query, r0, t, self.device).flatten() # shape:(population_size, ); bottleneck!
+            reward = api(query, r0, t, self.device).flatten() # shape:(population_size, );
             avg = (reward - tr.mean(reward)) / tr.std(reward)
             x_opt -= x_opt + self.lr /(self.population_size*self.std) * (gause_noise.T@avg)
 

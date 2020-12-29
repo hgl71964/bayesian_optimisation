@@ -23,7 +23,7 @@ def es_loop(loss_func: callable,
             es_params: dict, 
             device = tr.device("cpu"),  # change to gpu if possile 
             ):
-    es = evolutionary_strategy(**es_params)
+    es = evolutionary_strategy(size, **es_params)
 
     # get x0, y0
     x0 = tr.from_numpy(api_utils.init_query(size, search_bounds)).float().to(device)
