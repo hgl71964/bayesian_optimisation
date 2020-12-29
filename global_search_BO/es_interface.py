@@ -17,7 +17,7 @@ evolutionary_strategy(loss, iteration, size, search_bounds, logger,
 
 def es_loop(loss_func: callable,
             iteration: int,  # time horison
-            size: int,  # q-parallelism, this should be 1 in ES
+            size: int,   # population size; query in parallel
             search_bounds: np.ndarray,  # shape: ((2, d)) 
             logger,  # TODO change this 
             es_params: dict, 
@@ -25,8 +25,8 @@ def es_loop(loss_func: callable,
             ):
     es = evolutionary_strategy(size, **es_params)
 
-    # get x0, y0
-    x0 = tr.from_numpy(api_utils.init_query(size, search_bounds)).float().to(device)
+    # x0 -> shape(1, d)
+    x0 = tr.from_numpy(api_utils.init_query(1, search_bounds)).to(device)
 
     #  decorate the api
     api = api_utils.wrapper(loss_func); r0 = 0; # TODO think about normalisation

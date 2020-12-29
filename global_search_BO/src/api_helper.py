@@ -56,11 +56,11 @@ class api_utils:
 
     @staticmethod
     def init_query(size, search_bounds):
-        """make initial query"""
+        """search_bound: shape (2, d)"""
         x0 = np.empty((size, len(search_bounds)))
         for i in range(size):
             for j, r in enumerate(search_bounds):
-                x0[i][j] = np.random.uniform(search_bounds[j][0], search_bounds[j][1])
-        return x0
+                x0[i][j] = np.random.uniform(search_bounds[0][j], search_bounds[1][j])
+        return x0.astype(np.float32)
 
 

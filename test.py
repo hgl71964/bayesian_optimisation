@@ -1,12 +1,11 @@
 from global_search_BO.es_interface import es_loop
-
+import torch as tr
+import numpy as np
 
 print(es_loop)
 
+a = np.ones(3)
 
-def f(*arg):
-    for i in arg:
-        print(i)
+print(tr.from_numpy(a).dtype)
 
-
-f(*[1,2,3])
+print(tr.from_numpy(a.astype(np.float32)).dtype)

@@ -31,7 +31,7 @@ def bayes_loop(loss_func: callable,
     x0 = api_utils.init_query(size, search_bounds); y0 = api_utils.init_reward(x0, loss_func);
 
     #  format the initial pair
-    x0, y0 = tr.from_numpy(x0).float().to(device), y0.to(device)
+    x0, y0 = tr.from_numpy(x0).to(device), y0.to(device)
 
     #  decorate the api
     api = api_utils.wrapper(loss_func); r0 = 0; # TODO think about normalisation
