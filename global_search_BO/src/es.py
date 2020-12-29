@@ -36,7 +36,7 @@ class evolutionary_strategy:
 
             x[t], y[t] = x_opt, reward.max()  # TODO: we use max() as the reward in this round?
             
-            print(f"Iter: {t+1}, reward: {(y[t]).item():,.2f}")
+            print(f"Iter: {t}, reward: {(y[t]).item():,.2f}")
 
         return x, y
 
