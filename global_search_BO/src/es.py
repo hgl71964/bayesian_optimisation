@@ -28,7 +28,7 @@ class evolutionary_strategy:
         for i in range(1,T+1):
 
             query = x_opt.repeat(self.population_size, 1)  # shape:(population_size, q)
-            gause_noise = tr.normal(0, self.std, (self.population_size, input_dim))
+            gause_noise = tr.normal(0, self.std, (self.population_size, q))
             query += gause_noise
 
             reward = api(query, r0, t, self.device).flatten() # shape:(population_size, ); bottleneck!
