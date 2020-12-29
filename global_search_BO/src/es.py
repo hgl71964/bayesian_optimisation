@@ -22,6 +22,8 @@ class evolutionary_strategy:
         x, y = tr.empty((1+T, input_dim )), tr.empty((1+T, ))
         x[0], y[0] = x_opt, api(x_opt, r0, 0, self.device).flatten().max()
 
+        print(f"initial reward {y[0].item():,.2f}")
+
         for t in range(1,T+1):
 
             query = x_opt.repeat(self.population_size, 1)  # shape:(population_size, input_dim)
