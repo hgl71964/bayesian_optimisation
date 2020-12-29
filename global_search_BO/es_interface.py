@@ -26,10 +26,7 @@ def es_loop(loss_func: callable,
     es = evolutionary_strategy(**es_params)
 
     # get x0, y0
-    x0 = api_utils.init_query(size, search_bounds)
-
-    #  format the initial pair
-    x0 = tr.from_numpy(x0).float().to(device)
+    x0 = tr.from_numpy(api_utils.init_query(size, search_bounds)).float().to(device)
 
     #  decorate the api
     api = api_utils.wrapper(loss_func); r0 = 0; # TODO think about normalisation
