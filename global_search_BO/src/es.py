@@ -20,7 +20,7 @@ class evolutionary_strategy:
                 ):
         x_opt = deepcopy(x0); input_dim = x0.shape[-1]  
         x, y = tr.empty((1+T, input_dim )), tr.empty((1+T, ))
-        x[0], y[0] = x_opt, api(x_opt, r0, 0, self.device).flatten().max()
+        x[0], y[0] = x_opt, api(x_opt, r0, 0, self.device).flatten().max()  # only one query
 
         print(f"initial reward {y[0].item():,.2f}")
 
